@@ -1,14 +1,39 @@
-export default function handler(req, res) {
+import { v2 as cloudinary } from 'cloudinary'
+import { IncomingForm } from 'formidable'
+
+cloudinary.config({
+  cloud_name: 'your-cloud-name',
+  api_key: 'your-api-key',
+  api_secret: 'your-api-secret'
+})
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+export default async function handler(req, res) {
   if (req.method === 'POST') {
-    // Handle file upload
+    const data = await new Promise((resolve, reject) => {
+      const form = new IncomingForm()
 
-    // This is just a stub for now. In reality, you would probably
-    // upload the file to a storage service, like Google Cloud Storage or AWS S3.
+      form.parse(req, (err, fields, files) => {
+        if (err) return reject(err)
+        resolve({ fields, files })
+      })
+    })
 
-    console.log('File received!');
-    res.status(200).json({ message: 'File received!' });
+    const file = data.files.file
+    cloudinary.uploader.upload(file.path, function(error, result) {
+      if (error) {
+        res.status(500).json({ error: 'Upload failed' })
+      } else {
+        res.status(200).json({ message: 'Upload successful', url: result.url })
+      }
+    })
   } else {
-    // If it's not a POST request, return 405 - Method Not Allowed
-    res.status(405).json({ message: 'Method not allowed' });
+    res.status(405).json({ message: 'Method not allowed' })
   }
 }
+
