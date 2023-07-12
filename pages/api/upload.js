@@ -2,9 +2,9 @@ import { v2 as cloudinary } from 'cloudinary'
 import { IncomingForm } from 'formidable'
 
 cloudinary.config({
-  cloud_name: 'your-cloud-name',
-  api_key: 'your-api-key',
-  api_secret: 'your-api-secret'
+  cloud_name: 'dhbrlikjn',
+  api_key: '482427242623733',
+  api_secret: 'aQGDEZgQc68N8rAuysngFODuxyo'
 })
 
 export const config = {
