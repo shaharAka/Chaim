@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     })
 
     const file = data.files.file
-    cloudinary.uploader.upload(file.path, function(error, result) {
+    cloudinary.uploader.upload(file.path, {folder: "app"},  function(error, result) {
       if (error) {
         res.status(500).json({ error: 'Upload failed' })
       } else {
