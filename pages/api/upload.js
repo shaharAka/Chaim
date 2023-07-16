@@ -1,39 +1,43 @@
-import { v2 as cloudinary } from 'cloudinary'
-import { IncomingForm } from 'formidable'
+import { useState } from 'react';
 
-cloudinary.config({
-  cloud_name: 'dhbrlikjn',
-  api_key: '482427242623733',
-  api_secret: 'aQGDEZgQc68N8rAuysngFODuxyo'
-})
+export default function UploadPage() {
+  const [selectedFile, setSelectedFile] = useState();
+  const [imageUrl, setImageUrl] = useState("");
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    const response = await fetch('http://34.127.124.108:8000/uploadfile/', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setImageUrl(data.original_image_url); // Assuming you want to display the original image
+      // or setImageUrl(data.overlay_image_url); to display the overlay
+      setDimensions({ width: data.image_width, height: data.image_height });
+      console.log('Uploaded successfully!');
+    } else {
+      console.error('Upload failed.');
+    }
+  };
+
+  const fileChangedHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  return (
+    <div>
+      <h1>Upload Image</h1>
+      <form onSubmit={submitHandler}>
+        <input type="file" onChange={fileChangedHandler} />
+        <button type="submit">Upload</button>
+      </form>
+      {imageUrl && <img src={imageUrl} width={dimensions.width} height={dimensions.height} />}
+    </div>
+  );
 }
-
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const data = await new Promise((resolve, reject) => {
-      const form = new IncomingForm()
-
-      form.parse(req, (err, fields, files) => {
-        if (err) return reject(err)
-        resolve({ fields, files })
-      })
-    })
-
-    const file = data.files.file
-    cloudinary.uploader.upload(file.path, {folder: "app"},  function(error, result) {
-      if (error) {
-        res.status(500).json({ error: 'Upload failed' })
-      } else {
-        res.status(200).json({ message: 'Upload successful', url: result.url })
-      }
-    })
-  } else {
-    res.status(405).json({ message: 'Method not allowed' })
-  }
-}
-
