@@ -2,18 +2,23 @@ import { useState } from 'react';
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
+  const [imageUrl, setImageUrl] = useState("");
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const submitHandler = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    const response = await fetch('/api/upload', {
+    const response = await fetch('http://34.127.124.108:8000/uploadfile/', {
       method: 'POST',
       body: formData,
     });
 
     if (response.ok) {
+      const data = await response.json();
+      setImageUrl(data.original_image_url);
+      setDimensions({ width: data.image_width, height: data.image_height });
       console.log('Uploaded successfully!');
     } else {
       console.error('Upload failed.');
@@ -31,6 +36,7 @@ export default function UploadPage() {
         <input type="file" onChange={fileChangedHandler} />
         <button type="submit">Upload</button>
       </form>
+      {imageUrl && <img src={imageUrl} width={dimensions.width} height={dimensions.height} />}
     </div>
   );
 }
