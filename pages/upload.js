@@ -9,7 +9,7 @@ export default function UploadPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    const response = await fetch('https://34.127.124.108:8000/uploadfile/', {
+    const response = await fetch('https://www.sunsolve.co/uploadfile/', {
       method: 'POST',
       body: formData,
     });
