@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -7,12 +7,12 @@ export default function UploadPage() {
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [crop, setCrop] = useState({ aspect: 1 / 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
+  const imgRef = useRef(null);
 
   const submitHandler = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('crop', completedCrop);
 
     const response = await fetch('https://www.sunsolve.co/uploadfile/', {
       method: 'POST',
@@ -28,6 +28,28 @@ export default function UploadPage() {
     }
   };
 
+  const segmentHandler = async () => {
+    const formData = new FormData();
+    formData.append('crop', completedCrop);
+
+    const response = await fetch('https://www.sunsolve.co/segment/', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setOriginalImageUrl(data.segmented_image_url);
+      console.log('Segmented successfully!');
+    } else {
+      console.error('Segmentation failed.');
+    }
+  };
+
+  const onLoad = (img) => {
+    imgRef.current = img;
+  };
+
   const fileChangedHandler = (event) => {
     setSelectedFile(event.target.files[0]);
   };
@@ -40,12 +62,16 @@ export default function UploadPage() {
         <button type="submit">Upload</button>
       </form>
       {originalImageUrl && (
-        <ReactCrop
-          src={originalImageUrl}
-          crop={crop}
-          onChange={(newCrop) => setCrop(newCrop)}
-          onComplete={(newCrop) => setCompletedCrop(newCrop)}
-        />
+        <div>
+          <ReactCrop
+            src={originalImageUrl}
+            onImageLoaded={onLoad}
+            crop={crop}
+            onChange={(newCrop) => setCrop(newCrop)}
+            onComplete={(newCrop) => setCompletedCrop(newCrop)}
+          />
+          <button onClick={segmentHandler}>Segment</button>
+        </div>
       )}
     </div>
   );
