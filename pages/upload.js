@@ -3,13 +3,14 @@ import { useState, useRef } from 'react';
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
   const [originalImageUrl, setOriginalImageUrl] = useState();
-  const [coords, setCoords] = useState({x: 0, y: 0});
-  const [coordsDisplay, setCoordsDisplay] = useState(false);
+  const [coords, setCoords] = useState([]);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const imageRef = useRef(null);
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    setCoordsDisplay(false); // reset coords display on new upload
+    setCoords([]); // reset coords on new upload
+    setIsImageLoaded(false); // reset image load status on new upload
     const formData = new FormData();
     formData.append('file', selectedFile);
 
@@ -35,8 +36,7 @@ export default function UploadPage() {
     const rect = imageRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    setCoords({ x, y });
-    setCoordsDisplay(true); // display coords after clicking on the image
+    setCoords(oldCoords => [...oldCoords, { x, y }]);
   };
 
   return (
@@ -46,9 +46,24 @@ export default function UploadPage() {
         <input type="file" onChange={fileChangedHandler} />
         <button type="submit">Upload</button>
       </form>
-      {originalImageUrl && <img ref={imageRef} src={originalImageUrl} alt="Original" width="400" height="400" onClick={handleImageClick} />}
-      <button onClick={() => console.log(coords)}>Click on the wound</button>
-      {coordsDisplay && <p>Clicked at: {`X: ${coords.x}, Y: ${coords.y}`}</p>}
+      {originalImageUrl && <img ref={imageRef} src={originalImageUrl} alt="Original" width="400" height="400" onClick={handleImageClick} onLoad={() => setIsImageLoaded(true)} />}
+      {isImageLoaded && <button onClick={() => console.log(coords)}>Click on the wound</button>}
+      {coords.map((coord, index) => <p key={index}>Clicked at: {`X: ${coord.x}, Y: ${coord.y}`}</p>)}
+      <style jsx>{`
+        img {
+          position: relative;
+        }
+        img::after {
+          content: '';
+          position: absolute;
+          top: ${coords.length > 0 ? `${coords[coords.length - 1].y}px` : '0'};
+          left: ${coords.length > 0 ? `${coords[coords.length - 1].x}px` : '0'};
+          width: 10px;
+          height: 10px;
+          background: red;
+          border-radius: 50%;
+        }
+      `}</style>
     </div>
   );
 }
