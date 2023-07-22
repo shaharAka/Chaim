@@ -5,7 +5,8 @@ import 'react-image-crop/dist/ReactCrop.css';
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
   const [originalImageUrl, setOriginalImageUrl] = useState();
-  const [crop, setCrop] = useState({ aspect: 1 / 1 });
+  const [overlayImageUrl, setOverlayImageUrl] = useState();
+  const [crop, setCrop] = useState({ aspect: 1/1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
 
@@ -61,18 +62,20 @@ export default function UploadPage() {
         <input type="file" onChange={fileChangedHandler} />
         <button type="submit">Upload</button>
       </form>
-      {originalImageUrl && (
+      {originalImageUrl && 
+      <div>
         <div>
-          <ReactCrop
+          <ReactImageCrop
             src={originalImageUrl}
             onImageLoaded={onLoad}
             crop={crop}
-            onChange={(newCrop) => setCrop(newCrop)}
-            onComplete={(newCrop) => setCompletedCrop(newCrop)}
+            onChange={c => setCrop(c)}
+            onComplete={c => setCompletedCrop(c)}
           />
-          <button onClick={segmentHandler}>Segment</button>
         </div>
-      )}
+        <button onClick={segmentHandler}>Segment!</button>
+      </div>}
+      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
     </div>
   );
 }
