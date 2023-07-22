@@ -32,11 +32,22 @@ export default function UploadPage() {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleImageClick = (event) => {
+  const handleImageClick = async (event) => {
     const rect = imageContainerRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     setCoords(oldCoords => [...oldCoords, { x, y }]);
+    // Send coordinates to the backend
+    const response = await fetch('https://www.sunsolve.co/getcoords/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ x, y }),
+    });
+    if (!response.ok) {
+      console.error('Failed to send coordinates to the backend.');
+    }
   };
 
   return (
@@ -52,7 +63,7 @@ export default function UploadPage() {
           <div key={index} style={{ position: 'absolute', top: `${coord.y}px`, left: `${coord.x}px`, width: '10px', height: '10px', background: 'red', borderRadius: '50%' }}></div>
         ))}
       </div>
-      {isImageLoaded && <button onClick={() => console.log(coords)}>Click on the wound</button>}
+      {isImageLoaded && <p>Click on the wound</p>}
       {coords.map((coord, index) => <p key={index}>Clicked at: {`X: ${coord.x}, Y: ${coord.y}`}</p>)}
     </div>
   );
