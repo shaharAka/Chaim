@@ -5,7 +5,7 @@ export default function UploadPage() {
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [coords, setCoords] = useState([]);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const imageRef = useRef(null);
+  const imageContainerRef = useRef(null);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -33,7 +33,7 @@ export default function UploadPage() {
   };
 
   const handleImageClick = (event) => {
-    const rect = imageRef.current.getBoundingClientRect();
+    const rect = imageContainerRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     setCoords(oldCoords => [...oldCoords, { x, y }]);
@@ -46,24 +46,14 @@ export default function UploadPage() {
         <input type="file" onChange={fileChangedHandler} />
         <button type="submit">Upload</button>
       </form>
-      {originalImageUrl && <img ref={imageRef} src={originalImageUrl} alt="Original" width="400" height="400" onClick={handleImageClick} onLoad={() => setIsImageLoaded(true)} />}
+      <div ref={imageContainerRef} onClick={handleImageClick} style={{ position: 'relative', width: '400px', height: '400px' }}>
+        {originalImageUrl && <img src={originalImageUrl} alt="Original" width="400" height="400" onLoad={() => setIsImageLoaded(true)} />}
+        {coords.map((coord, index) => (
+          <div key={index} style={{ position: 'absolute', top: `${coord.y}px`, left: `${coord.x}px`, width: '10px', height: '10px', background: 'red', borderRadius: '50%' }}></div>
+        ))}
+      </div>
       {isImageLoaded && <button onClick={() => console.log(coords)}>Click on the wound</button>}
       {coords.map((coord, index) => <p key={index}>Clicked at: {`X: ${coord.x}, Y: ${coord.y}`}</p>)}
-      <style jsx>{`
-        img {
-          position: relative;
-        }
-        img::after {
-          content: '';
-          position: absolute;
-          top: ${coords.length > 0 ? `${coords[coords.length - 1].y}px` : '0'};
-          left: ${coords.length > 0 ? `${coords[coords.length - 1].x}px` : '0'};
-          width: 10px;
-          height: 10px;
-          background: red;
-          border-radius: 50%;
-        }
-      `}</style>
     </div>
   );
 }
