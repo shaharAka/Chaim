@@ -12,7 +12,6 @@ export default function UploadPage() {
 
     const response = await fetch('https://www.sunsolve.co/uploadfile/', {
       method: 'POST',
-      mode: 'no-cors',
       body: formData,
     });
 
