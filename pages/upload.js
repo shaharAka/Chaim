@@ -3,13 +3,13 @@ import { useState, useRef } from 'react';
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
   const [originalImageUrl, setOriginalImageUrl] = useState();
-  const [isClicked, setIsClicked] = useState(false);
-  const [coords, setCoords] = useState(null);
+  const [coords, setCoords] = useState({x: 0, y: 0});
+  const [coordsDisplay, setCoordsDisplay] = useState(false);
   const imageRef = useRef(null);
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    setIsClicked(false); // reset click state on new upload
+    setCoordsDisplay(false); // reset coords display on new upload
     const formData = new FormData();
     formData.append('file', selectedFile);
 
@@ -36,7 +36,7 @@ export default function UploadPage() {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     setCoords({ x, y });
-    setIsClicked(true); // set click state to true after clicking on the image
+    setCoordsDisplay(true); // display coords after clicking on the image
   };
 
   return (
@@ -47,7 +47,8 @@ export default function UploadPage() {
         <button type="submit">Upload</button>
       </form>
       {originalImageUrl && <img ref={imageRef} src={originalImageUrl} alt="Original" width="400" height="400" onClick={handleImageClick} />}
-      {isClicked && <button onClick={() => console.log(coords)}>Click on the wound</button>}
+      <button onClick={() => console.log(coords)}>Click on the wound</button>
+      {coordsDisplay && <p>Clicked at: {`X: ${coords.x}, Y: ${coords.y}`}</p>}
     </div>
   );
 }
