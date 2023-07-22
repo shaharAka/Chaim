@@ -36,8 +36,8 @@ export default function UploadPage() {
         <input type="file" onChange={fileChangedHandler} />
         <button type="submit">Upload</button>
       </form>
-      {originalImageUrl && <img src={originalImageUrl} alt="Original" />}
-      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" />}  {/* display the overlay image */}
+      {originalImageUrl && <img src={originalImageUrl} alt="Original" width="400" height="400" />}
+      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" width="400" height="400" />}  {/* display the overlay image */}
     </div>
   );
 }
