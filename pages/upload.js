@@ -31,7 +31,7 @@ export default function UploadPage() {
 
   const segmentHandler = async () => {
     const formData = new FormData();
-    formData.append('crop', completedCrop);
+    formData.append('crop', JSON.stringify(completedCrop));
 
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
@@ -40,7 +40,7 @@ export default function UploadPage() {
 
     if (response.ok) {
       const data = await response.json();
-      setOriginalImageUrl(data.segmented_image_url);
+      setOverlayImageUrl(data.segmented_image_url);
       console.log('Segmented successfully!');
     } else {
       console.error('Segmentation failed.');
@@ -64,15 +64,14 @@ export default function UploadPage() {
       </form>
       {originalImageUrl && 
       <div>
-        <div>
-          <ReactImageCrop
-            src={originalImageUrl}
-            onImageLoaded={onLoad}
-            crop={crop}
-            onChange={c => setCrop(c)}
-            onComplete={c => setCompletedCrop(c)}
-          />
-        </div>
+        <ReactCrop
+          src={originalImageUrl}
+          onImageLoaded={onLoad}
+          crop={crop}
+          onChange={c => setCrop(c)}
+          onComplete={c => setCompletedCrop(c)}
+          style={{maxWidth: "400px", maxHeight: "400px"}}
+        />
         <button onClick={segmentHandler}>Segment!</button>
       </div>}
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
