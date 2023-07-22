@@ -6,6 +6,7 @@ export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [overlayImageUrl, setOverlayImageUrl] = useState();
+  const [filename, setFilename] = useState();
   const [crop, setCrop] = useState({ aspect: 1/1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
@@ -23,6 +24,7 @@ export default function UploadPage() {
     if (response.ok) {
       const data = await response.json();
       setOriginalImageUrl(data.original_image_url);
+      setFilename(selectedFile.name);
       console.log('Uploaded successfully!');
     } else {
       console.error('Upload failed.');
@@ -30,12 +32,15 @@ export default function UploadPage() {
   };
 
   const segmentHandler = async () => {
-    const formData = new FormData();
-    formData.append('crop', JSON.stringify(completedCrop));
-
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        filename: filename,
+        crop: JSON.stringify(completedCrop)
+      })
     });
 
     if (response.ok) {
