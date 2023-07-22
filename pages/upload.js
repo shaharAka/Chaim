@@ -2,7 +2,8 @@ import { useState } from 'react';
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
-  const [imageUrl, setImageUrl] = useState();
+  const [originalImageUrl, setOriginalImageUrl] = useState();
+  const [overlayImageUrl, setOverlayImageUrl] = useState();
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -16,7 +17,8 @@ export default function UploadPage() {
 
     if (response.ok) {
       const data = await response.json();
-      setImageUrl(data.original_image_url);
+      setOriginalImageUrl(data.original_image_url);
+      setOverlayImageUrl(data.overlay_image_url);  // handle the overlay image URL
       console.log('Uploaded successfully!');
     } else {
       console.error('Upload failed.');
@@ -34,7 +36,8 @@ export default function UploadPage() {
         <input type="file" onChange={fileChangedHandler} />
         <button type="submit">Upload</button>
       </form>
-      {imageUrl && <img src={imageUrl} alt="Uploaded" />}
+      {originalImageUrl && <img src={originalImageUrl} alt="Original" />}
+      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" />}  {/* display the overlay image */}
     </div>
   );
 }
