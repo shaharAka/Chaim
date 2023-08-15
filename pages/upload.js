@@ -23,6 +23,7 @@ export default function UploadPage() {
 
     if (response.ok) {
       const data = await response.json();
+      console.log('Server response:', data);
       setOriginalImageUrl(data.original_image_url);
       setFilename(selectedFile.name);
       console.log('Uploaded successfully!');
