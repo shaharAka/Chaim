@@ -40,7 +40,7 @@ export default function UploadPage() {
     },
     body: JSON.stringify({
       filename: filename,
-      crop: JSON.stringify(completedCrop)
+      crop: JSON.stringify(completedCrop) //
     })
   });
 
