@@ -32,25 +32,26 @@ export default function UploadPage() {
   };
 
   const segmentHandler = async () => {
-    const response = await fetch('https://www.sunsolve.co/segment/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        filename: filename,
-        crop: JSON.stringify(completedCrop)
-      })
-    });
+  const response = await fetch('https://www.sunsolve.co/segment/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      filename: filename,
+      crop: JSON.stringify(completedCrop)
+    })
+  });
 
-    if (response.ok) {
-      const data = await response.json();
-      setOverlayImageUrl(data.segmented_image_url);
-      console.log('Segmented successfully!');
-    } else {
-      console.error('Segmentation failed.');
-    }
-  };
+  if (response.ok) {
+    const data = await response.json();
+    const maskBase64 = data.mask_base64;
+    setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
+    console.log('Segmented successfully!');
+  } else {
+    console.error('Segmentation failed.');
+  }
+};
 
   const onLoad = (img) => {
     imgRef.current = img;
