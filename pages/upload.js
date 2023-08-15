@@ -36,7 +36,7 @@ export default function UploadPage() {
   const response = await fetch('https://www.sunsolve.co/segment/', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json' //
     },
     body: JSON.stringify({
       filename: filename,
