@@ -103,13 +103,13 @@ export default function UploadPage() {
         </div>}
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
       {maskArea !== undefined && 
-        <div>
+        <div className="info-box">
           <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
           <p>Defect Color: 
-            <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span>
+            <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {defectColor.join(', ')}
           </p>
           <p>Reference Skin Color: 
-            <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span>
+            <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {referenceSkinColor.join(', ')}
           </p>
         </div>}
     </div>
