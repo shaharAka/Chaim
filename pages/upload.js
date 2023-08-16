@@ -10,6 +10,8 @@ export default function UploadPage() {
   const [crop, setCrop] = useState({ aspect: 1/1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
+  const [defectColor, setDefectColor] = useState(null); // State to hold the defect color
+  const [referenceSkinColor, setReferenceSkinColor] = useState(null); // State to hold the reference skin color
   const imgRef = useRef(null);
 
   const submitHandler = async (event) => {
@@ -64,6 +66,8 @@ export default function UploadPage() {
       const maskBase64 = data.mask_base64;
       setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
       setMaskArea(data.mask_area_mm2); // Set the mask area
+      setDefectColor(data.defect_color); // Set the defect color
+      setReferenceSkinColor(data.reference_skin_color); // Set the reference skin color
       console.log('Segmented successfully!');
     } else {
       console.error('Segmentation failed.');
@@ -79,31 +83,35 @@ export default function UploadPage() {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div>
-        <h1>Upload Image</h1>
-        <form onSubmit={submitHandler}>
-          <input type="file" onChange={fileChangedHandler} />
-          <button type="submit">Upload</button>
-        </form>
-        {originalImageUrl && 
-          <div>
-            <ReactCrop
-              src={originalImageUrl}
-              onImageLoaded={onLoad}
-              crop={crop}
-              onChange={c => setCrop(c)}
-              onComplete={c => setCompletedCrop(c)}
-              style={{maxWidth: "400px", maxHeight: "400px"}}
-            />
-            <button onClick={segmentHandler}>Segment!</button>
-          </div>}
-        {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
-      </div>
-      <div style={{ marginLeft: '20px', padding: '10px', border: '1px solid #000', minWidth: '200px' }}>
-        <h3>Info Box</h3>
-        {maskArea !== undefined && <div>Calculated Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>} {/* Display the mask area */}
-      </div>
+    <div>
+      <h1>Upload Image</h1>
+      <form onSubmit={submitHandler}>
+        <input type="file" onChange={fileChangedHandler} />
+        <button type="submit">Upload</button>
+      </form>
+      {originalImageUrl && 
+        <div>
+          <ReactCrop
+            src={originalImageUrl}
+            onImageLoaded={onLoad}
+            crop={crop}
+            onChange={c => setCrop(c)}
+            onComplete={c => setCompletedCrop(c)}
+            style={{maxWidth: "400px", maxHeight: "400px"}}
+          />
+          <button onClick={segmentHandler}>Segment!</button>
+        </div>}
+      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+      {maskArea !== undefined && 
+        <div>
+          <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
+          <p>Defect Color: 
+            <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span>
+          </p>
+          <p>Reference Skin Color: 
+            <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span>
+          </p>
+        </div>}
     </div>
   );
 }
