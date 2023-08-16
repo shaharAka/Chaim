@@ -33,15 +33,29 @@ export default function UploadPage() {
   };
 
   const segmentHandler = async () => {
+  // Getting the scaling factors
+  const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
+  const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
+
+  // Scaling the coordinates
+  const scaledCrop = {
+    x: completedCrop.x * scaleX,
+    y: completedCrop.y * scaleY,
+    width: completedCrop.width * scaleX,
+    height: completedCrop.height * scaleY,
+    unit: completedCrop.unit,
+    aspect: completedCrop.aspect,
+  };
+
   const response = await fetch('https://www.sunsolve.co/segment/', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json' 
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       filename: filename,
-      crop: JSON.stringify(completedCrop) 
-    })
+      crop: JSON.stringify(scaledCrop), // Sending the scaled coordinates
+    }),
   });
 
   if (response.ok) {
