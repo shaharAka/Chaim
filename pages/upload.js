@@ -9,8 +9,8 @@ export default function UploadPage() {
   const [filename, setFilename] = useState();
   const [crop, setCrop] = useState({ aspect: 1/1 });
   const [completedCrop, setCompletedCrop] = useState(null);
+  const [maskArea, setMaskArea] = useState(); // State to hold the mask area
   const imgRef = useRef(null);
-  const [maskArea, setMaskArea] = useState(null);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -34,41 +34,41 @@ export default function UploadPage() {
   };
 
   const segmentHandler = async () => {
-  // Getting the scaling factors
-  const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
-  const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
+    // Getting the scaling factors
+    const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
+    const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
 
-  // Scaling the coordinates
-  const scaledCrop = {
-    x: completedCrop.x * scaleX,
-    y: completedCrop.y * scaleY,
-    width: completedCrop.width * scaleX,
-    height: completedCrop.height * scaleY,
-    unit: completedCrop.unit,
-    aspect: completedCrop.aspect,
+    // Scaling the coordinates
+    const scaledCrop = {
+      x: completedCrop.x * scaleX,
+      y: completedCrop.y * scaleY,
+      width: completedCrop.width * scaleX,
+      height: completedCrop.height * scaleY,
+      unit: completedCrop.unit,
+      aspect: completedCrop.aspect,
+    };
+
+    const response = await fetch('https://www.sunsolve.co/segment/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        filename: filename,
+        crop: JSON.stringify(scaledCrop), // Sending the scaled coordinates
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const maskBase64 = data.mask_base64;
+      setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
+      setMaskArea(data.mask_area_mm2); // Set the mask area
+      console.log('Segmented successfully!');
+    } else {
+      console.error('Segmentation failed.');
+    }
   };
-
-  const response = await fetch('https://www.sunsolve.co/segment/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      filename: filename,
-      crop: JSON.stringify(scaledCrop), // Sending the scaled coordinates
-    }),
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    const maskBase64 = data.mask_base64;
-    setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
-    setMaskArea(data.mask_area_mm2);
-    console.log('Segmented successfully!');
-  } else {
-    console.error('Segmentation failed.');
-  }
-};
 
   const onLoad = (img) => {
     imgRef.current = img;
@@ -86,19 +86,19 @@ export default function UploadPage() {
         <button type="submit">Upload</button>
       </form>
       {originalImageUrl && 
-      <div>
-        <ReactCrop
-          src={originalImageUrl}
-          onImageLoaded={onLoad}
-          crop={crop}
-          onChange={c => setCrop(c)}
-          onComplete={c => setCompletedCrop(c)}
-          style={{maxWidth: "400px", maxHeight: "400px"}}
-        />
-        <button onClick={segmentHandler}>Segment!</button>
-      </div>}
-      {maskArea !== null && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>}
+        <div>
+          <ReactCrop
+            src={originalImageUrl}
+            onImageLoaded={onLoad}
+            crop={crop}
+            onChange={c => setCrop(c)}
+            onComplete={c => setCompletedCrop(c)}
+            style={{maxWidth: "400px", maxHeight: "400px"}}
+          />
+          <button onClick={segmentHandler}>Segment!</button>
+        </div>}
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+      {maskArea !== undefined && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>} {/* Display the mask area */}
     </div>
   );
 }
