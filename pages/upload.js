@@ -10,6 +10,7 @@ export default function UploadPage() {
   const [crop, setCrop] = useState({ aspect: 1/1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
+  const [maskArea, setMaskArea] = useState(null);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -62,6 +63,7 @@ export default function UploadPage() {
     const data = await response.json();
     const maskBase64 = data.mask_base64;
     setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
+    setMaskArea(data.mask_area_mm2);
     console.log('Segmented successfully!');
   } else {
     console.error('Segmentation failed.');
@@ -95,6 +97,7 @@ export default function UploadPage() {
         />
         <button onClick={segmentHandler}>Segment!</button>
       </div>}
+      {maskArea !== null && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>}
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
     </div>
   );
