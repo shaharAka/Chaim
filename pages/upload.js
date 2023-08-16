@@ -79,26 +79,31 @@ export default function UploadPage() {
   };
 
   return (
-    <div>
-      <h1>Upload Image</h1>
-      <form onSubmit={submitHandler}>
-        <input type="file" onChange={fileChangedHandler} />
-        <button type="submit">Upload</button>
-      </form>
-      {originalImageUrl && 
-        <div>
-          <ReactCrop
-            src={originalImageUrl}
-            onImageLoaded={onLoad}
-            crop={crop}
-            onChange={c => setCrop(c)}
-            onComplete={c => setCompletedCrop(c)}
-            style={{maxWidth: "400px", maxHeight: "400px"}}
-          />
-          <button onClick={segmentHandler}>Segment!</button>
-        </div>}
-      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
-      {maskArea !== undefined && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>} {/* Display the mask area */}
+    <div style={{ display: 'flex' }}>
+      <div>
+        <h1>Upload Image</h1>
+        <form onSubmit={submitHandler}>
+          <input type="file" onChange={fileChangedHandler} />
+          <button type="submit">Upload</button>
+        </form>
+        {originalImageUrl && 
+          <div>
+            <ReactCrop
+              src={originalImageUrl}
+              onImageLoaded={onLoad}
+              crop={crop}
+              onChange={c => setCrop(c)}
+              onComplete={c => setCompletedCrop(c)}
+              style={{maxWidth: "400px", maxHeight: "400px"}}
+            />
+            <button onClick={segmentHandler}>Segment!</button>
+          </div>}
+        {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+      </div>
+      <div style={{ marginLeft: '20px', padding: '10px', border: '1px solid #000', minWidth: '200px' }}>
+        <h3>Info Box</h3>
+        {maskArea !== undefined && <div>Calculated Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>} {/* Display the mask area */}
+      </div>
     </div>
   );
 }
