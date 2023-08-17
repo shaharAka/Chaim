@@ -117,7 +117,6 @@ export default function UploadPage() {
         </p>
         <p>Delta E Value: {deltaEValue.toFixed(2)}</p> 
       </div>
-}
     </div>
   </div>
 );
