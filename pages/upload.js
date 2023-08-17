@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { rgb2lab, deltaE } from 'delta-e';
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
