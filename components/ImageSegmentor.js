@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import ImageUploader from './ImageUploader';
+import ImageUploader from './ImageUploader.js';
 
 export default function ImageSegmenter() {
   const [originalImageUrl, setOriginalImageUrl] = useState();
