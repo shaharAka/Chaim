@@ -85,38 +85,39 @@ export default function UploadPage() {
     setSelectedFile(event.target.files[0]);
   };
 
-  return (
-    <div>
-      <h1>Upload Image</h1>
-      <form onSubmit={submitHandler}>
-        <input type="file" onChange={fileChangedHandler} />
-        <button type="submit">Upload</button>
-      </form>
-      {originalImageUrl && 
-        <div>
-          <ReactCrop
-            src={originalImageUrl}
-            onImageLoaded={onLoad}
-            crop={crop}
-            onChange={c => setCrop(c)}
-            onComplete={c => setCompletedCrop(c)}
-            style={{maxWidth: "400px", maxHeight: "400px"}}
-          />
-          <button onClick={segmentHandler}>Segment!</button>
-        </div>}
-      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+ return (
+  <div>
+    <h1>Upload Image</h1>
+    <form onSubmit={submitHandler}>
+      <input type="file" onChange={fileChangedHandler} />
+      <button type="submit">Upload</button>
+    </form>
+    {originalImageUrl && 
       <div>
-      {maskArea !== undefined && 
-    <div className="info-box">
-      <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
-      <p>Defect Color: 
-        <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {defectColor.join(', ')}
-      </p>
-      <p>Reference Skin Color: 
-        <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {referenceSkinColor.join(', ')}
-      </p>
-      <p>Delta E Value: {deltaEValue.toFixed(2)}</p> {/* Rendering the deltaE value */}
-    </div>}
-</div>
-
-}
+        <ReactCrop
+          src={originalImageUrl}
+          onImageLoaded={onLoad}
+          crop={crop}
+          onChange={c => setCrop(c)}
+          onComplete={c => setCompletedCrop(c)}
+          style={{maxWidth: "400px", maxHeight: "400px"}}
+        />
+        <button onClick={segmentHandler}>Segment!</button>
+      </div>}
+    {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+    <div>
+    {maskArea !== undefined && 
+      <div className="info-box">
+        <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
+        <p>Defect Color: 
+          <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {defectColor.join(', ')}
+        </p>
+        <p>Reference Skin Color: 
+          <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {referenceSkinColor.join(', ')}
+        </p>
+        <p>Delta E Value: {deltaEValue.toFixed(2)}</p> {/* Rendering the deltaE value */}
+      </div>
+    }
+    </div> {/* Ensure that the number of opening and closing div tags match */}
+  </div>
+);
