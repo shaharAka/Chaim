@@ -115,9 +115,9 @@ export default function UploadPage() {
         <p>Reference Skin Color: 
           <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {referenceSkinColor.join(', ')}
         </p>
-        <p>Delta E Value: {deltaEValue.toFixed(2)}</p> {/* Rendering the deltaE value */}
+        <p>Delta E Value: {deltaEValue.toFixed(2)}</p> 
       </div>
-    }
-    </div> {/* Ensure that the number of opening and closing div tags match */}
+}
+    </div>
   </div>
 );
