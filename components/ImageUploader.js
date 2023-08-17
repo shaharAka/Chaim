@@ -2,17 +2,21 @@ import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Button, Stack } from '@mui/material';
+import { useDropzone } from 'react-dropzone';
 
 export default function ImageUploader({ onUpload }) {
   const [selectedFile, setSelectedFile] = useState();
   const [originalImageUrl, setOriginalImageUrl] = useState();
-  const [crop, setCrop] = useState({ aspect: 1/1 });
+  const [crop, setCrop] = useState({ aspect: 1 / 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
 
-  const fileChangedHandler = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: 'image/*',
+    onDrop: (acceptedFiles) => {
+      setSelectedFile(acceptedFiles[0]);
+    },
+  });
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -42,18 +46,14 @@ export default function ImageUploader({ onUpload }) {
   return (
     <div>
       <Stack direction="row" spacing={2} alignItems="center">
-        <label htmlFor="contained-button-file">
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="contained-button-file"
-            type="file"
-            onChange={fileChangedHandler}
-          />
-          <Button variant="contained" component="span">
-            Upload
-          </Button>
-        </label>
+        <div {...getRootProps()}>
+          <input {...getInputProps()} />
+          {
+            isDragActive ?
+              <Button variant="contained">Drop the image here</Button> :
+              <Button variant="contained" component="span">Upload</Button>
+          }
+        </div>
         <Button variant="contained" onClick={submitHandler}>
           Submit
         </Button>
