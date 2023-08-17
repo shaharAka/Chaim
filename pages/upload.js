@@ -10,8 +10,6 @@ export default function UploadPage() {
   const [crop, setCrop] = useState({ aspect: 1/1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
-  const [defectColor, setDefectColor] = useState(null); // State to hold the defect color
-  const [referenceSkinColor, setReferenceSkinColor] = useState(null); // State to hold the reference skin color
   const imgRef = useRef(null);
   const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
 
@@ -68,8 +66,6 @@ export default function UploadPage() {
       const maskBase64 = data.mask_base64;
       setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
       setMaskArea(data.mask_area_mm2); // Set the mask area
-      setDefectColor(data.defect_color); // Set the defect color
-      setReferenceSkinColor(data.reference_skin_color); // Set the reference skin color
       setDeltaEValue(data.delta_e);
       console.log('Segmented successfully!');
     } else {
@@ -109,16 +105,10 @@ export default function UploadPage() {
         {maskArea !== undefined && 
           <div className="info-box">
             <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
-            <p>Defect Color: 
-              <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {defectColor.join(', ')}
-            </p>
-            <p>Reference Skin Color: 
-              <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {referenceSkinColor.join(', ')}
-            </p>
             <p>Delta E Value: {deltaEValue.toFixed(2)}</p> 
           </div>
         }
-      </div> {/* Remove the curly brace that was here */}
+      </div> 
     </div>
   );
 }
