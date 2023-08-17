@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageSegmentor from '../components/ImageSegmentor'; 
+import ImageSegmentor from '../components/ImageSegmentor.js'; 
 
 export default function UploadPage() {
   return (
