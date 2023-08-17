@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import { rgb2lab, deltaE } from 'delta-e';
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
@@ -13,6 +14,8 @@ export default function UploadPage() {
   const [defectColor, setDefectColor] = useState(null); // State to hold the defect color
   const [referenceSkinColor, setReferenceSkinColor] = useState(null); // State to hold the reference skin color
   const imgRef = useRef(null);
+  const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
+
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -68,6 +71,7 @@ export default function UploadPage() {
       setMaskArea(data.mask_area_mm2); // Set the mask area
       setDefectColor(data.defect_color); // Set the defect color
       setReferenceSkinColor(data.reference_skin_color); // Set the reference skin color
+      setDeltaEValue(data.delta_e);
       console.log('Segmented successfully!');
     } else {
       console.error('Segmentation failed.');
@@ -102,16 +106,18 @@ export default function UploadPage() {
           <button onClick={segmentHandler}>Segment!</button>
         </div>}
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+      <div>
       {maskArea !== undefined && 
-        <div className="info-box">
-          <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
-          <p>Defect Color: 
-            <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {defectColor.join(', ')}
-          </p>
-          <p>Reference Skin Color: 
-            <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {referenceSkinColor.join(', ')}
-          </p>
-        </div>}
-    </div>
-  );
+    <div className="info-box">
+      <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
+      <p>Defect Color: 
+        <span style={{background: `rgb(${defectColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {defectColor.join(', ')}
+      </p>
+      <p>Reference Skin Color: 
+        <span style={{background: `rgb(${referenceSkinColor.join(',')})`, padding: '5px'}}>&nbsp;</span> {referenceSkinColor.join(', ')}
+      </p>
+      <p>Delta E Value: {deltaEValue.toFixed(2)}</p> {/* Rendering the deltaE value */}
+    </div>}
+</div>
+
 }
