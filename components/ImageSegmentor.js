@@ -58,6 +58,7 @@ export default function ImageSegmenter() {
           setFilename(name);
           setOriginalImageUrl(url);
         }}
+        setCompletedCrop={setCompletedCrop}
       />
       <button onClick={segmentHandler}>Segment!</button>
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
