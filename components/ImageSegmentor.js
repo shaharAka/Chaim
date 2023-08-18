@@ -54,12 +54,13 @@ export default function ImageSegmenter() {
   return (
     <div>
       <ImageUploader
-        onUpload={(name, url) => {
-          setFilename(name);
-          setOriginalImageUrl(url);
-        }}
-        setCompletedCrop={setCompletedCrop}
-      />
+      onUpload={(name, url) => {
+        setFilename(name);
+        setOriginalImageUrl(url);
+      }}
+      setCompletedCrop={setCompletedCrop}
+      onImageLoaded={img => { imgRef.current = img; }} // Added this line
+    />
       <button onClick={segmentHandler}>Segment!</button>
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
       <div>
