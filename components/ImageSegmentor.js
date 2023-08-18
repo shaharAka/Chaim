@@ -17,9 +17,19 @@ export default function ImageSegmenter() {
   const segmentHandler = async () => {
     if (!completedCrop || !imgRef.current) return;
 
+      // Log the natural and display sizes
+    console.log('Natural Width:', imgRef.current.naturalWidth);
+    console.log('Display Width:', imgRef.current.width);
+    console.log('Natural Height:', imgRef.current.naturalHeight);
+    console.log('Display Height:', imgRef.current.height);
+
     // Getting the scaling factors
     const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
     const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
+
+    // Log the scaling factors
+    console.log('ScaleX:', scaleX);
+    console.log('ScaleY:', scaleY);
 
     // Scaling the coordinates
     const scaledCrop = {
@@ -31,6 +41,8 @@ export default function ImageSegmenter() {
       aspect: completedCrop.aspect,
     };
 
+    // Log the scaled crop
+    console.log('Scaled Crop:', scaledCrop);
 
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
