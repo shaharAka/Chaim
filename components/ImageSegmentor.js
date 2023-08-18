@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ImageUploader from './ImageUploader.js';
 import { Stack, Button } from '@mui/material';
+import { Line } from 'react-chartjs-2';
 
 export default function ImageSegmenter({ onSegmentationComplete }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
@@ -10,6 +11,18 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
   const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
   const [segmentationComplete, setSegmentationComplete] = useState(false); 
+  const [plotData, setPlotData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Values',
+        data: [],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+      },
+    ],
+  });
 
   const imgRef = useRef(null);
   
@@ -71,6 +84,15 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
       setMaskArea(data.mask_area_mm2); // Set the mask area
       setDeltaEValue(data.delta_e);
+      setPlotData(prevData => ({
+        labels: [...prevData.labels, `Segment ${filename}`], // Add segment name as label
+        datasets: [
+          {
+            ...prevData.datasets[0],
+            data: [...prevData.datasets[0].data, deltaEValue], // Add deltaEValue as example data
+          },
+        ],
+      }));
       console.log('Segmented successfully!');
       if (onSegmentationComplete) {
         onSegmentationComplete(); 
@@ -93,7 +115,10 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       />
       {originalImageUrl && (
         <div>
-          {!segmentationComplete && ( // Conditionally render the Segment button
+          {!segmentationComplete && ( 
+          <div>
+          <Line data={plotData} />
+        </div>
             <Button
               variant="contained"
               color="primary"
