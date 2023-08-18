@@ -27,18 +27,6 @@ export default function ImageSegmenter() {
       aspect: completedCrop.aspect,
     };
 
-    const payload = {
-    filename: filename,
-    crop: scaledCrop, // make sure it's not stringified
-    };
-    console.log('Sending request with payload:', payload);
-    const response = await fetch('https://www.sunsolve.co/segment/', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-    });
 
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
