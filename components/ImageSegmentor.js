@@ -9,12 +9,13 @@ export default function ImageSegmenter() {
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
   const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
   const imgRef = useRef(null);
-  const onImageLoad = img => {
-  imgRef.current = img;
-};
+  
+  const onImageLoad = (event) => {
+    imgRef.current = event.target; // event.target will contain the img element
+  };
 
   const segmentHandler = async () => {
-    if (!completedCrop) return;
+    if (!completedCrop || !imgRef.current) return;
 
     // Getting the scaling factors
     const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
@@ -57,13 +58,13 @@ export default function ImageSegmenter() {
   return (
     <div>
       <ImageUploader
-      onUpload={(name, url) => {
-        setFilename(name);
-        setOriginalImageUrl(url);
-      }}
-      setCompletedCrop={setCompletedCrop}
-      onImageLoaded={img => onImageLoad(img)} 
-    />
+        onUpload={(name, url) => {
+          setFilename(name);
+          setOriginalImageUrl(url);
+        }}
+        setCompletedCrop={setCompletedCrop}
+        onImageLoaded={onImageLoad} // Just pass the reference to the function
+      />
       <button onClick={segmentHandler}>Segment!</button>
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
       <div>
@@ -78,3 +79,9 @@ export default function ImageSegmenter() {
     </div>
   );
 }
+
+
+
+
+
+
