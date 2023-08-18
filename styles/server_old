@@ -1,0 +1,199 @@
+from fastapi import FastAPI, UploadFile, File, Form, Body
+from PIL import Image
+import cv2
+import numpy as np
+from google.cloud import storage
+import os
+from segment_anything import SamAutomaticMaskGenerator, sam_model_registry, SamPredictor
+from fastapi.middleware.cors import CORSMiddleware
+from typing import List, Dict, Optional
+import logging
+import json
+import base64
+from fastapi.middleware.cors import CORSMiddleware
+from colorspacious import cspace_convert
+
+
+# Default pixel size in mm^2 
+pixel_size_mm2 = 0.01
+
+
+app = FastAPI()
+
+origins = [
+    "*",  # your frontend origin
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Set up a logger
+logger = logging.getLogger('my_logger')
+logger.setLevel(logging.INFO)
+
+# Set up a file handler
+handler = logging.FileHandler('my_log.log')
+handler.setLevel(logging.INFO)
+
+# Create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# Add the handlers to the logger
+logger.addHandler(handler)
+
+# Instantiate a storage client
+storage_client = storage.Client()
+
+# Replace with your bucket name
+bucket_name = 'chaim-storage'
+bucket = storage_client.get_bucket(bucket_name)
+
+def resize_and_pad_image(image, desired_size=600):
+
+    if image.dtype != np.uint8:
+        image = (image * 255).astype(np.uint8)
+
+    old_size = image.shape[:2]  # old_size is in (height, width) format
+
+    ratio = float(desired_size)/max(old_size)
+    new_size = tuple([int(x*ratio) for x in old_size])
+
+    image = cv2.resize(image, (new_size[1], new_size[0]))
+
+    delta_w = desired_size - new_size[1]
+    delta_h = desired_size - new_size[0]
+    top, bottom = delta_h//2, delta_h-(delta_h//2)
+    left, right = delta_w//2, delta_w-(delta_w//2)
+
+    color = [0, 0, 0]
+    new_im = cv2.copyMakeBorder(image, top, bottom, left, right, cv2.BORDER_CONSTANT,
+                                value=color)
+    return new_im
+
+
+@app.get("/health")
+def read_root():
+    return {"Status": "Healthy"}
+
+
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile):
+    contents = await file.read()
+    nparr = np.fromstring(contents, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    img = resize_and_pad_image(img)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    
+    original_blob = bucket.blob(file.filename)
+    original_blob.upload_from_string(contents, content_type=file.content_type)
+
+    original_image_url = f"https://storage.googleapis.com/{bucket_name}/{file.filename}"
+    
+    return {"original_image_url": original_image_url, "image_width": img.shape[1], "image_height": img.shape[0]}
+
+@app.post("/segment/")
+async def segment_image(body = Body(...)):
+    logger.info(body)  # log the 'body' data
+    filename = body["filename"]
+    crop_data = body["crop"]
+    bbox = json.loads(crop_data)  # parse the string into a dict
+
+    blob = storage_client.get_bucket(bucket_name).get_blob(filename)
+    img_bytes = blob.download_as_bytes()
+    nparr = np.fromstring(img_bytes, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # Resize the original image
+    logger.info(f'original image size: {img.shape}')
+    # resized_img = resize_and_pad_image(img)
+    resized_img = img
+    logger.info(f'resized image size: {resized_img.shape}')
+    
+    sam = sam_model_registry["vit_b"](checkpoint="/home/shaharro/project/segment-anything/sam_vit_b_01ec64.pth")
+    predictor = SamPredictor(sam)
+    predictor.set_image(img)
+
+    bbox_array = np.array([int(bbox['x']), int(bbox['y']), int(bbox['x'] + bbox['width']), int(bbox['y'] + bbox['height'])])[None, :]
+    logger.info(f'bbox_array: {bbox_array}')  # log the bbox_array
+    bbox = bbox_array[0]
+    
+    #masks, _, _ = predictor.predict(box=bbox_array, multimask_output=False)
+    masks, _, _ = predictor.predict(
+    point_coords=None,
+    point_labels=None,
+    box=bbox_array[None, :],
+    multimask_output=False,
+)
+
+    mask = masks[0]  # Get the first mask (adjust as needed)
+    logger.info(f'original mask size: {mask.shape}')
+    # resized_mask = resize_and_pad_image(mask)
+    resized_mask = mask
+    logger.info(f'resized mask size: {resized_mask.shape}')
+
+    # Convert the mask to boolean format
+    resized_mask_bool = (resized_mask > 0).astype(bool)
+
+    # Expand dimensions to match the original image
+    mask_3d = np.stack([resized_mask_bool] * 3, axis=2)
+
+    # Create a copy of the resized image
+    combined_img = resized_img.copy()
+
+    # Apply the mask to the original image
+    combined_img[mask_3d] = 255  # You can choose the color here
+
+    # Draw the bounding box on the combined image
+    cv2.rectangle(combined_img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 2)
+
+
+    _, buffer = cv2.imencode('.png', combined_img)  # Encode as PNG
+    combined_base64 = base64.b64encode(buffer).decode()  # Convert to base64
+
+    # Calculate the area of the original mask in pixels
+    mask_area_pixels = np.sum(mask > 0)
+
+    # Convert the area to mm^2 using the pixel size
+    mask_area_mm2 = mask_area_pixels * pixel_size_mm2
+    logger.info(f'mask area: {mask_area_mm2}')
+
+    # Create mask and bounding box from received data
+    mask_bool = (mask > 0).astype(bool)
+    bounding_box_region = resized_img[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+    mask_region = mask_bool[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+
+    # Extract defect (mask) color
+    defect_color = np.mean(bounding_box_region[mask_region], axis=0)
+
+    # Extract reference skin color
+    reference_skin_color = np.mean(bounding_box_region[np.invert(mask_region)], axis=0)
+
+    # calculate the RGB colors
+    defect_color_rgb = {"R": defect_color[0], "G": defect_color[1], "B": defect_color[2]}
+    reference_skin_color_rgb = {"R": reference_skin_color[0], "G": reference_skin_color[1], "B": reference_skin_color[2]}
+
+    # Convert RGB values to CIELab color space
+    defect_color_lab = cspace_convert(defect_color, "sRGB1", "CIELab")
+    reference_skin_color_lab = cspace_convert(reference_skin_color, "sRGB1", "CIELab")
+
+
+    # Calculate the Euclidean distance (Delta E) between the two colors
+    delta_e = np.linalg.norm(defect_color_lab - reference_skin_color_lab)
+
+    return {
+    "mask_base64": combined_base64, 
+    "mask_area_mm2": mask_area_mm2,
+    "defect_color": defect_color_rgb,
+    "reference_skin_color": reference_skin_color_rgb,
+    "delta_e": delta_e
+
+    }
+
+    
