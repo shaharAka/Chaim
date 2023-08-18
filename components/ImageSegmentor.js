@@ -115,11 +115,8 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
     />
     {originalImageUrl && (
       <div>
-        {segmentationComplete ? (
-          <div>
-            <Line data={plotData} />
-          </div>
-        ) : (
+        {segmentationComplete && <Line data={plotData} />}
+        {!segmentationComplete && (
           <Button
             variant="contained"
             color="primary"
@@ -143,6 +140,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
     )}
   </div>
 );
+
 
 
 
