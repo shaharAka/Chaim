@@ -9,18 +9,21 @@ export default function ImageUploader({ onUpload, setCompletedCrop }) {
   const [crop, setCrop] = useState({ aspect: 1 / 1 });
 
   const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
+  const file = acceptedFiles[0];
+  const reader = new FileReader();
 
-    reader.onloadend = () => {
-      setOriginalImageUrl(reader.result);
-    };
-
+  reader.onloadend = () => {
+    const result = reader.result;
+    setOriginalImageUrl(result);
     if (file) {
-      reader.readAsDataURL(file);
-      onUpload(file.name, reader.result);
+      onUpload(file.name, result); // Call onUpload here after reading is complete
     }
-  }, [onUpload]);
+  };
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+}, [onUpload]);
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
