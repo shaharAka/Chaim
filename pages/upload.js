@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ImageSegmentor from '../components/ImageSegmentor.js';
+import { Button } from '@mui/material';
 
 export default function UploadPage() {
   const [imageSegmentors, setImageSegmentors] = useState([0]); // State to hold the count of ImageSegmentor components
@@ -17,14 +18,24 @@ export default function UploadPage() {
   };
 
   return (
-    <div>
-      <h1>Upload Image</h1>
+  <div>
+    <h1>Upload Image</h1>
+    <div style={{ display: 'flex' }}>
       {imageSegmentors.map((segmentor, index) => (
-        <ImageSegmentor key={index} onSegmentationComplete={handleSegmentationComplete} />
+        <div key={index} style={{ marginRight: '16px' }}>
+          <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
+        </div>
       ))}
       {segmentationComplete && (
-        <button onClick={addImageSegmentor}>+</button>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ height: '400px', width: '400px' }} // Match the height and width of the image
+          onClick={addImageSegmentor}
+        >
+          +
+        </Button>
       )}
     </div>
-  );
-}
+  </div>
+);
