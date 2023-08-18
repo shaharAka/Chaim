@@ -52,7 +52,6 @@ export default function ImageSegmenter() {
 
   return (
     <div>
-      <h1>Upload and Segment Image</h1>
       <ImageUploader
         onUpload={(name, url) => {
           setFilename(name);
@@ -70,6 +69,7 @@ export default function ImageSegmenter() {
           </div>
         }
       </div>
+        {originalImageUrl && <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} />}
     </div>
   );
 }
