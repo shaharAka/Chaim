@@ -21,7 +21,9 @@
     "@mui/material": "^5.0.0",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
-    "react-dropzone": "11.4.2"
+    "react-dropzone": "11.4.2",
+    "react-chartjs-2": "^3.3.0", 
+    "chart.js": "^3.5.1"
   }
 }
 
