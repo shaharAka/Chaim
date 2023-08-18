@@ -69,7 +69,7 @@ export default function ImageSegmenter() {
           </div>
         }
       </div>
-        {originalImageUrl && <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} />}
+        {originalImageUrl && <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} />} 
     </div>
   );
 }
