@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ImageSegmentor from '../components/ImageSegmentor.js';
-import { Button } from '@mui/material';
+import Button from '@material-ui/core/Button';
 
 export default function UploadPage() {
   const [imageSegmentors, setImageSegmentors] = useState([0]); // State to hold the count of ImageSegmentor components
