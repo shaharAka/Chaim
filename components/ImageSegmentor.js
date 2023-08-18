@@ -11,18 +11,6 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
   const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
   const [segmentationComplete, setSegmentationComplete] = useState(false); 
-  const [plotData, setPlotData] = useState({
-    labels: [],
-    datasets: [
-      {
-        label: 'Values',
-        data: [],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-    ],
-  });
 
   const imgRef = useRef(null);
   
@@ -95,7 +83,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       }));
       console.log('Segmented successfully!');
       if (onSegmentationComplete) {
-        onSegmentationComplete(); 
+        onSegmentationComplete(data.delta_e, filename); 
       }
       setSegmentationComplete(true);
     } else {
@@ -115,7 +103,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
     />
     {originalImageUrl && (
       <div>
-        {segmentationComplete && <Line data={plotData} />}
+        
         {!segmentationComplete && (
           <Button
             variant="contained"
