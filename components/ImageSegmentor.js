@@ -139,7 +139,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       </div>
     )}
   </div>
-)
+);
 
 
 
