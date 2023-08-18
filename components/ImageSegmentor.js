@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ImageUploader from './ImageUploader.js';
 
-export default function ImageSegmenter() {
+export default function ImageSegmenter({ onSegmentationComplete }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [filename, setFilename] = useState();
   const [overlayImageUrl, setOverlayImageUrl] = useState();
@@ -69,6 +69,9 @@ export default function ImageSegmenter() {
       setMaskArea(data.mask_area_mm2); // Set the mask area
       setDeltaEValue(data.delta_e);
       console.log('Segmented successfully!');
+      if (onSegmentationComplete) {
+        onSegmentationComplete(); 
+      }
     } else {
       console.error('Segmentation failed.');
     }
