@@ -104,45 +104,46 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   };
 
    return (
-    <div>
-      <ImageUploader
-        onUpload={(name, url) => {
-          setFilename(name);
-          setOriginalImageUrl(url);
-        }}
-        setCompletedCrop={setCompletedCrop}
-        onImageLoaded={onImageLoad}
-      />
-      {originalImageUrl && (
-        <div>
-          {!segmentationComplete && ( 
+  <div>
+    <ImageUploader
+      onUpload={(name, url) => {
+        setFilename(name);
+        setOriginalImageUrl(url);
+      }}
+      setCompletedCrop={setCompletedCrop}
+      onImageLoaded={onImageLoad}
+    />
+    {originalImageUrl && (
+      <div>
+        {segmentationComplete ? (
           <div>
-          <Line data={plotData} />
-        </div>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ width: '400px' }} // Match the width of the image
-              onClick={segmentHandler}
-            >
-              Segment!
-            </Button>
-          )}
-          {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
-          <div>
-            {maskArea !== undefined &&
-              <div className="info-box">
-                <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
-                <p>Delta E Value: {deltaEValue.toFixed(2)}</p>
-              </div>
-            }
+            <Line data={plotData} />
           </div>
-          <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} onLoad={onImageLoad} />
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ width: '400px' }} // Match the width of the image
+            onClick={segmentHandler}
+          >
+            Segment!
+          </Button>
+        )}
+        {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
+        <div>
+          {maskArea !== undefined &&
+            <div className="info-box">
+              <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
+              <p>Delta E Value: {deltaEValue.toFixed(2)}</p>
+            </div>
+          }
         </div>
-      )}
-    </div>
-  );
-}
+        <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} onLoad={onImageLoad} />
+      </div>
+    )}
+  </div>
+);
+
 
 
 
