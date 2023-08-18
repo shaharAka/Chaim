@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import ImageUploader from './ImageUploader.js';
+import { Stack, Button } from '@mui/material';
 
 export default function ImageSegmenter({ onSegmentationComplete }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
