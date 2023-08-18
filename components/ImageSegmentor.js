@@ -77,7 +77,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
     }
   };
 
-  return (
+   return (
     <div>
       <ImageUploader
         onUpload={(name, url) => {
@@ -85,19 +85,30 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
           setOriginalImageUrl(url);
         }}
         setCompletedCrop={setCompletedCrop}
-        onImageLoaded={onImageLoad} // Just pass the reference to the function
+        onImageLoaded={onImageLoad}
       />
-      <button onClick={segmentHandler}>Segment!</button>
-      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
-      <div>
-        {maskArea !== undefined &&
-          <div className="info-box">
-            <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
-            <p>Delta E Value: {deltaEValue.toFixed(2)}</p>
+      {originalImageUrl && (
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ width: '400px' }} // Match the width of the image
+            onClick={segmentHandler}
+          >
+            Segment!
+          </Button>
+          {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
+          <div>
+            {maskArea !== undefined &&
+              <div className="info-box">
+                <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
+                <p>Delta E Value: {deltaEValue.toFixed(2)}</p>
+              </div>
+            }
           </div>
-        }
-      </div>
-        {originalImageUrl && <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} onLoad={onImageLoad} />} 
+          <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} onLoad={onImageLoad} />
+        </div>
+      )}
     </div>
   );
 }
