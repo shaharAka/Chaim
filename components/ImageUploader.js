@@ -28,10 +28,12 @@ export default function ImageUploader({ onUpload }) {
   return (
     <div>
       <Stack direction="row" spacing={2} alignItems="center">
-        <div {...getRootProps()} style={{ border: '2px dashed #000', padding: '10px', cursor: 'pointer' }}>
-          <input {...getInputProps()} />
-          <p>Drag and drop an image here, or click to select an image</p>
-        </div>
+        {!originalImageUrl && (
+          <div {...getRootProps()} style={{ border: '2px dashed #000', padding: '10px', cursor: 'pointer' }}>
+            <input {...getInputProps()} />
+            <p>Drag and drop an image here, or click to select an image</p>
+          </div>
+        )}
         {originalImageUrl && (
           <div>
             <ReactCrop
