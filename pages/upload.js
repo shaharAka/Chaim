@@ -6,6 +6,7 @@ export default function UploadPage() {
     <div>
       <h1>Upload Image</h1>
       <ImageSegmentor /> 
+      <ImageSegmentor />
     </div>
   );
 }
