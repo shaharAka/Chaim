@@ -9,6 +9,8 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   const [completedCrop, setCompletedCrop] = useState(null);
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
   const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
+  const [segmentationComplete, setSegmentationComplete] = useState(false); 
+
   const imgRef = useRef(null);
   
   const onImageLoad = (event) => {
@@ -73,6 +75,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       if (onSegmentationComplete) {
         onSegmentationComplete(); 
       }
+      setSegmentationComplete(true);
     } else {
       console.error('Segmentation failed.');
     }
@@ -90,14 +93,16 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       />
       {originalImageUrl && (
         <div>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ width: '400px' }} // Match the width of the image
-            onClick={segmentHandler}
-          >
-            Segment!
-          </Button>
+          {!segmentationComplete && ( // Conditionally render the Segment button
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ width: '400px' }} // Match the width of the image
+              onClick={segmentHandler}
+            >
+              Segment!
+            </Button>
+          )}
           {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
           <div>
             {maskArea !== undefined &&
