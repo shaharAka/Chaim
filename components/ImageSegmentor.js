@@ -23,9 +23,16 @@ export default function ImageSegmenter() {
     console.log('Natural Height:', imgRef.current.naturalHeight);
     console.log('Display Height:', imgRef.current.height);
 
+     // Get the original image aspect ratio
+    const originalAspectRatio = imgRef.current.naturalWidth / imgRef.current.naturalHeight;
+
+    // Get the displayed width and height
+    const displayedWidth = 400;
+    const displayedHeight = 400 / originalAspectRatio;
+
     // Getting the scaling factors
-    const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
-    const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
+    const scaleX = imgRef.current.naturalWidth / displayedWidth;
+    const scaleY = imgRef.current.naturalHeight / displayedHeight;
 
     // Log the scaling factors
     console.log('ScaleX:', scaleX);
