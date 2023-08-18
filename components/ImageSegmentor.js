@@ -9,6 +9,9 @@ export default function ImageSegmenter() {
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
   const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
   const imgRef = useRef(null);
+  const onImageLoad = img => {
+  imgRef.current = img;
+};
 
   const segmentHandler = async () => {
     if (!completedCrop) return;
@@ -59,7 +62,7 @@ export default function ImageSegmenter() {
         setOriginalImageUrl(url);
       }}
       setCompletedCrop={setCompletedCrop}
-      onImageLoaded={img => { imgRef.current = img; }} // Added this line
+      onImageLoaded={img => {onImageLoad} 
     />
       <button onClick={segmentHandler}>Segment!</button>
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
@@ -71,7 +74,7 @@ export default function ImageSegmenter() {
           </div>
         }
       </div>
-        {originalImageUrl && <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} />} 
+        {originalImageUrl && <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} onLoad={onImageLoad} />} 
     </div>
   );
 }
