@@ -18,24 +18,25 @@ export default function UploadPage() {
   };
 
   return (
-  <div>
-    <h1>Upload Image</h1>
-    <div style={{ display: 'flex' }}>
-      {imageSegmentors.map((segmentor, index) => (
-        <div key={index} style={{ marginRight: '16px' }}>
-          <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
-        </div>
-      ))}
-      {segmentationComplete && (
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ height: '400px', width: '400px' }} // Match the height and width of the image
-          onClick={addImageSegmentor}
-        >
-          +
-        </Button>
-      )}
+    <div>
+      <h1>Upload Image</h1>
+      <div style={{ display: 'flex' }}>
+        {imageSegmentors.map((segmentor, index) => (
+          <div key={index} style={{ marginRight: '16px' }}>
+            <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
+          </div>
+        ))}
+        {segmentationComplete && (
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ height: '400px', width: '400px' }} // Match the height and width of the image
+            onClick={addImageSegmentor}
+          >
+            +
+          </Button>
+        )}
+      </div> {/* This closing div tag was missing */}
     </div>
-  </div>
-)
+  );
+}
