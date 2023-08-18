@@ -2,8 +2,7 @@ import React, { useState, useCallback } from 'react';
 import ReactCrop from 'react-image-crop';
 import { useDropzone } from 'react-dropzone';
 import 'react-image-crop/dist/ReactCrop.css';
-import { Stack } from '@mui/material';
-import Button from '@material-ui/core/Button';
+import { Stack, Button } from '@mui/material';
 
 export default function ImageUploader({ onUpload, setCompletedCrop }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
