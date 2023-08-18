@@ -4,7 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Button, Stack } from '@mui/material';
 
-export default function ImageUploader({ onUpload }) {
+export default function ImageUploader({ onUpload, setCompletedCrop, onImageLoaded }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [crop, setCrop] = useState({ aspect: 1 / 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
@@ -28,19 +28,14 @@ export default function ImageUploader({ onUpload }) {
   return (
     <div>
       <Stack direction="row" spacing={2} alignItems="center">
-        {!originalImageUrl && (
-          <div {...getRootProps()} style={{ border: '2px dashed #000', padding: '10px', cursor: 'pointer' }}>
-            <input {...getInputProps()} />
-            <p>Drag and drop an image here, or click to select an image</p>
-          </div>
-        )}
         {originalImageUrl && (
           <div>
             <ReactCrop
               src={originalImageUrl}
+              onImageLoaded={onImageLoaded} // Added this line
               crop={crop}
               onChange={c => setCrop(c)}
-              onComplete={c => setCompletedCrop(c)}
+              onComplete={c => setCompletedCrop(c)} // Modified this line
               style={{ maxWidth: '400px', maxHeight: '400px' }}
             />
           </div>
