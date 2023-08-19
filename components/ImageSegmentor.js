@@ -65,6 +65,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       },
       body: JSON.stringify({
         filename: filename,
+        image: originalImageUrl,
         crop: JSON.stringify(scaledCrop), // Sending the scaled coordinates
       }),
     });
