@@ -16,6 +16,7 @@ export default function ImageUploader({ onUpload, setCompletedCrop }) {
     const result = reader.result;
     setOriginalImageUrl(result);
     if (file) {
+      console.log('Calling onUpload:', file.name, result);
       onUpload(file.name, result); // Call onUpload here after reading is complete
     }
   };
