@@ -118,11 +118,20 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
               Segment!
             </Button>
           )}
-          {/* ... rest of your code ... */}
+          {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
+        <div>
+          {maskArea !== undefined &&
+            <div className="info-box">
+              <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
+              <p>Delta E Value: {deltaEValue.toFixed(2)}</p>
+            </div>
+          }
         </div>
-      )}
-    </div>
-  );
+        <img ref={imgRef} src={originalImageUrl} alt="Original" style={{ display: 'none' }} onLoad={onImageLoad} />
+      </div>
+    )}
+  </div>
+);
 }
 
 
