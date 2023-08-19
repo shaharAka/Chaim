@@ -7,6 +7,18 @@ export default function UploadPage() {
   const [imageSegmentors, setImageSegmentors] = useState([0]); 
   const [segmentationComplete, setSegmentationComplete] = useState(false);
   // State to hold the plot data
+  const handleSegmentationComplete = (deltaE, filename) => {
+  setPlotData(prevData => ({
+    labels: [...prevData.labels, `Segment ${filename}`],
+    datasets: [
+      {
+        ...prevData.datasets[0],
+        data: [...prevData.datasets[0].data, deltaE],
+      },
+    ],
+  }));
+  setSegmentationComplete(true);
+};
   const [plotData, setPlotData] = useState({
     labels: [],
     datasets: [
