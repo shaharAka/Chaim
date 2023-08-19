@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 
 // You can import simple-statistics to perform linear regression
-import simpleStats from 'simple-statistics';
+import { linearRegression } from 'simple-statistics';
 
 export default function UploadPage() {
   const [imageSegmentors, setImageSegmentors] = useState([0]); 
@@ -44,8 +44,9 @@ export default function UploadPage() {
       const newData = [...prevData.datasets[0].data, deltaE];
 
       // Compute linear regression
-      const linearFit = simpleStats.linearRegression(newData.map((y, x) => [x, y]));
+      const linearFit = linearRegression(newData.map((y, x) => [x, y]));
       const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
+
 
       return {
         labels: newLabels,
