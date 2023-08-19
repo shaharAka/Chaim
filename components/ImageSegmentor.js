@@ -22,6 +22,9 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
 
   const segmentHandler = async () => {
     console.log('Segment handler called');
+    console.log('completedCrop:', completedCrop);
+    console.log('imgRef.current:', imgRef.current);
+
     if (!completedCrop || !imgRef.current) return;
 
       // Log the natural and display sizes
