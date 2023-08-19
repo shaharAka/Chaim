@@ -97,8 +97,6 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
     />
     {originalImageUrl && (
       <div>
-        <img src={originalImageUrl} alt="Original" style={{ width: "400px", height: "400px" }} />
-
         {/* Input for Treatment Number */}
         <TextField
           label="Treatment Number"
