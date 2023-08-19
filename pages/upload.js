@@ -13,7 +13,7 @@ export default function UploadPage() {
         label: 'Delta E Values',
         data: [],
         fill: false,
-        borderColor: 'rgb(75, 192, 192),
+        borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
       },
     ],
