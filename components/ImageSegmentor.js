@@ -21,6 +21,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   };
 
   const segmentHandler = async () => {
+    console.log('Segment handler called');
     if (!completedCrop || !imgRef.current) return;
 
       // Log the natural and display sizes
@@ -89,6 +90,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   <div>
     <ImageUploader
       onUpload={(name, url) => {
+        console.log('Image uploaded:', name, url);
         setFilename(name);
         setOriginalImageUrl(url);
       }}
