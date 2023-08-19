@@ -1,4 +1,3 @@
-import React, { useState, useRef } from 'react';
 import ImageUploader from './ImageUploader.js';
 import { Stack, Button } from '@mui/material';
 import { Line } from 'react-chartjs-2';
