@@ -72,15 +72,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
       setMaskArea(data.mask_area_mm2); // Set the mask area
       setDeltaEValue(data.delta_e);
-      setPlotData(prevData => ({
-        labels: [...prevData.labels, `Segment ${filename}`], // Add segment name as label
-        datasets: [
-          {
-            ...prevData.datasets[0],
-            data: [...prevData.datasets[0].data, deltaEValue], // Add deltaEValue as example data
-          },
-        ],
-      }));
+     
       console.log('Segmented successfully!');
       if (onSegmentationComplete) {
         onSegmentationComplete(data.delta_e, filename); 
