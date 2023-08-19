@@ -70,28 +70,28 @@ export default function UploadPage() {
   };
 
   return (
-    <div>
-      <h1>Upload Image</h1>
-      <div style={{ display: 'flex' }}>
-        {imageSegmentors.map((segmentor, index) => (
-          <div key={index} style={{ marginRight: '16px' }}>
-            <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
-          </div>
-        ))}
-        {segmentationComplete && (
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ height: '400px', width: '400px' }}
-            onClick={addImageSegmentor}
-          >
-            +
-          </Button>
-        )}
-      </div>
-      <div>
-        <Line data={plotData} />
-      </div>
+  <div>
+    <h1>Upload Image</h1>
+    <div style={{ display: 'flex' }}>
+      {imageSegmentors.map((segmentor, index) => (
+        <div key={index} style={{ marginRight: '16px' }}>
+          <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
+        </div>
+      ))}
+      {segmentationComplete && (
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ height: '400px', width: '400px' }}
+          onClick={addImageSegmentor}
+        >
+          +
+        </Button>
+      )}
     </div>
-  );
+    <div style={{ width: '600px', height: '300px' }}> {/* Set the constant width and height here */}
+      <Line data={plotData} />
+    </div>
+  </div>
+);
 }
