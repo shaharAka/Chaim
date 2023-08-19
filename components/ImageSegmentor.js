@@ -16,10 +16,10 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
 
   const imgRef = useRef(null);
   
-  const onImageLoad = (event) => {
-    console.log('onImageLoad event:', event);
-    imgRef.current = event.target; // event.target will contain the img element
-  };
+  const onImageLoad = useCallback((img) => {
+  imgRef.current = img;
+  console.log('Image loaded:', imgRef.current); // Log here to make sure it's being set
+}, []);
 
   const segmentHandler = async () => {
     console.log('Segment handler called');
