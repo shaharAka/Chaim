@@ -17,6 +17,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   const imgRef = useRef(null);
   
   const onImageLoad = (event) => {
+    console.log('onImageLoad event:', event);
     imgRef.current = event.target; // event.target will contain the img element
   };
 
