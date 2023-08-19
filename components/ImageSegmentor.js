@@ -3,6 +3,8 @@ import ImageUploader from './ImageUploader.js';
 import { Stack, Button } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { TextField } from '@mui/material';
+import React, { useState, useRef, useCallback } from 'react';
+
 
 export default function ImageSegmenter({ onSegmentationComplete }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
