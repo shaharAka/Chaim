@@ -1,72 +1,62 @@
 import React from 'react';
-import { Container, AppBar, Tabs, Tab, Box, Typography, TextField, Grid, Button } from '@mui/material';
+import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import AnalysisIcon from '@mui/icons-material/BarChart'; // Replace with a suitable icon for Analysis
+import DoctorIcon from '@mui/icons-material/LocalHospital'; // Replace with a suitable icon for Doctor Summary
 import Link from 'next/link';
 
 export default function Home() {
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     setValue(newValue);
   };
 
   return (
     <Container>
-      <AppBar position="static">
-        <Tabs value={value} onChange={handleChange}>
-          <Tab label="Patient Details" />
-          <Tab label="Analysis" />
-          <Tab label="Doctor Summary" />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <Typography variant="h5" gutterBottom>
-          Patient Details
-        </Typography>
-        <form>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField label="Name" variant="outlined" fullWidth />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField label="ID" variant="outlined" fullWidth />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField label="Age" variant="outlined" fullWidth type="number" />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Sex"
-                variant="outlined"
-                select
-                fullWidth
-                SelectProps={{
-                  native: true,
-                }}
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </TextField>
-            </Grid>
-          </Grid>
-        </form>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Link href="/upload">
-          <a>Upload an Image</a>
-        </Link>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <TextField
-          label="Doctor's Summary"
-          multiline
-          rows={4}
-          variant="outlined"
-          fullWidth
-        />
-        <Button variant="contained" color="primary" disabled>
-          Share Report
-        </Button>
-      </TabPanel>
+      <Drawer variant="permanent" open>
+        <List>
+          <ListItem button onClick={() => handleChange(0)}>
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText primary="Patient Details" />
+          </ListItem>
+          <ListItem button onClick={() => handleChange(1)}>
+            <ListItemIcon><AnalysisIcon /></ListItemIcon>
+            <ListItemText primary="Analysis" />
+          </ListItem>
+          <ListItem button onClick={() => handleChange(2)}>
+            <ListItemIcon><DoctorIcon /></ListItemIcon>
+            <ListItemText primary="Doctor Summary" />
+          </ListItem>
+        </List>
+      </Drawer>
+      <Box sx={{ marginLeft: 240 }}>
+        <TabPanel value={value} index={0}>
+          <Typography variant="h5" gutterBottom>
+            Patient Details
+          </Typography>
+          <form>
+            {/* Rest of the Patient Details Form */}
+          </form>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Link href="/upload">
+            <a>Upload an Image</a>
+          </Link>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <TextField
+            label="Doctor's Summary"
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+          />
+          <Button variant="contained" color="primary" disabled>
+            Share Report
+          </Button>
+        </TabPanel>
+      </Box>
     </Container>
   );
 }
