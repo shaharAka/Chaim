@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Button } from '@mui/material';
+import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart';
 import DoctorIcon from '@mui/icons-material/LocalHospital';
@@ -46,7 +46,33 @@ export default function Home() {
             <Typography variant="h5" gutterBottom>
               Patient Details
             </Typography>
-            {/* Rest of the Patient Details Form */}
+            <form>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Name" variant="outlined" fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="ID" variant="outlined" fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Age" variant="outlined" fullWidth type="number" />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Sex"
+                    variant="outlined"
+                    select
+                    fullWidth
+                    SelectProps={{
+                      native: true,
+                    }}
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </form>
           </div>
         )}
         {value === 1 && (
