@@ -24,7 +24,8 @@
     "react-dropzone": "11.4.2",
     "react-chartjs-2": "^3.3.0", 
     "chart.js": "^3.5.1",
-    "simple-statistics": "^7.7.0"
+    "simple-statistics": "^7.7.0",
+    "@mui/icons-material": "^5.0.0",
 
   }
 }
