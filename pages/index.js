@@ -10,10 +10,7 @@ export default function Home() {
 
   const handleChange = (newValue) => {
     setValue(newValue);
-    console.log("Value changed:", newValue); // Debug log for value change
   };
-
-  console.log("Current value:", value); // Debug log for current value
 
   return (
     <Container>
@@ -49,18 +46,21 @@ export default function Home() {
             <Typography variant="h5" gutterBottom>
               Patient Details
             </Typography>
-            {/* Patient Details Form */}
-            { /* Additional log to confirm rendering */ }
-            { console.log("Rendering Patient Details") }
             <form>
-              {/* Form content here */}
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Name" variant="outlined" fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="ID" variant="outlined" fullWidth />
+                </Grid>
+                {/* Rest of the Patient Details Form */}
+              </Grid>
             </form>
           </div>
         )}
         {value === 1 && (
           <div>
-            { /* Additional log to confirm rendering */ }
-            { console.log("Rendering Analysis") }
             <Link href="/upload">
               <a>Upload an Image</a>
             </Link>
@@ -68,8 +68,6 @@ export default function Home() {
         )}
         {value === 2 && (
           <div>
-            { /* Additional log to confirm rendering */ }
-            { console.log("Rendering Doctor Summary") }
             <TextField
               label="Doctor's Summary"
               multiline
