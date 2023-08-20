@@ -4,8 +4,18 @@ import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart'; // Replace with a suitable icon for Analysis
 import DoctorIcon from '@mui/icons-material/LocalHospital'; // Replace with a suitable icon for Doctor Summary
 import Link from 'next/link';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  drawer: {
+    backgroundColor: '#333333', // Grey background
+    color: 'white', // White text
+    width: 240, // Set a fixed width for the drawer
+  },
+});
 
 export default function Home() {
+  const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (newValue) => {
@@ -14,7 +24,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Drawer variant="permanent" open>
+      <Drawer variant="permanent" open classes={{ paper: classes.drawer }}>
         <List>
           <ListItem button onClick={() => handleChange(0)}>
             <ListItemIcon><PersonIcon /></ListItemIcon>
@@ -66,11 +76,7 @@ function TabPanel(props) {
 
   return (
     <div role="tabpanel" hidden={value !== index} {...other}>
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && children}
     </div>
   );
 }
