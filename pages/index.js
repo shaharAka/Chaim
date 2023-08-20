@@ -1,21 +1,20 @@
 import React from 'react';
-import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button } from '@mui/material';
+import { Container, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button, Drawer } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart'; // Replace with a suitable icon for Analysis
 import DoctorIcon from '@mui/icons-material/LocalHospital'; // Replace with a suitable icon for Doctor Summary
 import Link from 'next/link';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/system';
 
-const useStyles = makeStyles({
-  drawer: {
-    backgroundColor: '#333333', // Grey background
-    color: 'white', // White text
-    width: 240, // Set a fixed width for the drawer
-  },
-});
+const DrawerStyled = styled(Drawer)`
+  & .MuiDrawer-paper {
+    background-color: #333333; // Grey background
+    color: white; // White text
+    width: 240px; // Set a fixed width for the drawer
+  }
+`;
 
 export default function Home() {
-  const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (newValue) => {
@@ -24,7 +23,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Drawer variant="permanent" open classes={{ paper: classes.drawer }}>
+      <DrawerStyled variant="permanent" open>
         <List>
           <ListItem button onClick={() => handleChange(0)}>
             <ListItemIcon><PersonIcon /></ListItemIcon>
@@ -39,7 +38,7 @@ export default function Home() {
             <ListItemText primary="Doctor Summary" />
           </ListItem>
         </List>
-      </Drawer>
+      </DrawerStyled>
       <Box sx={{ marginLeft: 240 }}>
         <TabPanel value={value} index={0}>
           <Typography variant="h5" gutterBottom>
@@ -76,7 +75,11 @@ function TabPanel(props) {
 
   return (
     <div role="tabpanel" hidden={value !== index} {...other}>
-      {value === index && children}
+      {value === index && (
+        <Box>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
     </div>
   );
 }
