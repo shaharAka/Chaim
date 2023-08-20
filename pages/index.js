@@ -40,19 +40,63 @@ export default function Home() {
           </ListItem>
         </List>
       </Drawer>
-      <Grid container>
-        <Box sx={{ marginLeft: 240, width: 'calc(100% - 240px)' }}> {/* Adjusted the width */}
-          {value === 0 && (
-            // Your Patient Details Content Here
-          )}
-          {value === 1 && (
-            // Your Analysis Content Here
-          )}
-          {value === 2 && (
-            // Your Doctor Summary Content Here
-          )}
-        </Box>
-      </Grid>
+      <Box sx={{ marginLeft: 240, width: 'calc(100% - 240px)' }}>
+        {value === 0 && (
+          <div>
+            <Typography variant="h5" gutterBottom>
+              Patient Details
+            </Typography>
+            <form>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Name" variant="outlined" fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="ID" variant="outlined" fullWidth />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Age" variant="outlined" fullWidth type="number" />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Sex"
+                    variant="outlined"
+                    select
+                    fullWidth
+                    SelectProps={{
+                      native: true,
+                    }}
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+        )}
+        {value === 1 && (
+          <div>
+            <Link href="/upload">
+              <a>Upload an Image</a>
+            </Link>
+          </div>
+        )}
+        {value === 2 && (
+          <div>
+            <TextField
+              label="Doctor's Summary"
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
+            />
+            <Button variant="contained" color="primary" disabled>
+              Share Report
+            </Button>
+          </div>
+        )}
+      </Box>
     </Container>
   );
 }
