@@ -1,18 +1,9 @@
 import React from 'react';
-import { Container, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button, Drawer } from '@mui/material';
+import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Button } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart';
 import DoctorIcon from '@mui/icons-material/LocalHospital';
 import Link from 'next/link';
-import { styled } from '@mui/system';
-
-const DrawerStyled = styled(Drawer)`
-  & .MuiDrawer-paper {
-    background-color: #333333; // Grey background
-    color: white; // White text
-    width: 240px; // Set a fixed width for the drawer
-  }
-`;
 
 export default function Home() {
   const [value, setValue] = React.useState(0);
@@ -22,21 +13,56 @@ export default function Home() {
   };
 
   return (
-    <Container disableGutters>
-      <DrawerStyled variant="permanent" open>
+    <Container>
+      <Drawer
+        variant="permanent"
+        open
+        sx={{
+          '& .MuiDrawer-paper': {
+            backgroundColor: 'grey', // Grey background
+            color: 'white', // White text
+            width: 240 // Set a fixed width for the drawer
+          }
+        }}
+      >
         <List>
-          {/* Menu Items */}
+          <ListItem button onClick={() => handleChange(0)}>
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText primary="Patient Details" />
+          </ListItem>
+          <ListItem button onClick={() => handleChange(1)}>
+            <ListItemIcon><AnalysisIcon /></ListItemIcon>
+            <ListItemText primary="Analysis" />
+          </ListItem>
+          <ListItem button onClick={() => handleChange(2)}>
+            <ListItemIcon><DoctorIcon /></ListItemIcon>
+            <ListItemText primary="Doctor Summary" />
+          </ListItem>
         </List>
-      </DrawerStyled>
-      <Box component="main" sx={{ marginLeft: 240, flexGrow: 1, p: 3 }}>
+      </Drawer>
+      <Box sx={{ marginLeft: 240 }}>
         <TabPanel value={value} index={0}>
-          {/* Patient Details */}
+          <Typography variant="h5" gutterBottom>
+            Patient Details
+          </Typography>
+          {/* Rest of the Patient Details Form */}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {/* Analysis */}
+          <Link href="/upload">
+            <a>Upload an Image</a>
+          </Link>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          {/* Doctor Summary */}
+          <TextField
+            label="Doctor's Summary"
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+          />
+          <Button variant="contained" color="primary" disabled>
+            Share Report
+          </Button>
         </TabPanel>
       </Box>
     </Container>
