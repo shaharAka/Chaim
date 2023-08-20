@@ -19,9 +19,9 @@ export default function Home() {
         open
         sx={{
           '& .MuiDrawer-paper': {
-            backgroundColor: 'grey', // Grey background
-            color: 'white', // White text
-            width: 240 // Set a fixed width for the drawer
+            backgroundColor: 'grey',
+            color: 'white',
+            width: 240
           }
         }}
       >
@@ -41,44 +41,36 @@ export default function Home() {
         </List>
       </Drawer>
       <Box sx={{ marginLeft: 240 }}>
-        <TabPanel value={value} index={0}>
-          <Typography variant="h5" gutterBottom>
-            Patient Details
-          </Typography>
-          {/* Rest of the Patient Details Form */}
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Link href="/upload">
-            <a>Upload an Image</a>
-          </Link>
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <TextField
-            label="Doctor's Summary"
-            multiline
-            rows={4}
-            variant="outlined"
-            fullWidth
-          />
-          <Button variant="contained" color="primary" disabled>
-            Share Report
-          </Button>
-        </TabPanel>
+        {value === 0 && (
+          <div>
+            <Typography variant="h5" gutterBottom>
+              Patient Details
+            </Typography>
+            {/* Rest of the Patient Details Form */}
+          </div>
+        )}
+        {value === 1 && (
+          <div>
+            <Link href="/upload">
+              <a>Upload an Image</a>
+            </Link>
+          </div>
+        )}
+        {value === 2 && (
+          <div>
+            <TextField
+              label="Doctor's Summary"
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
+            />
+            <Button variant="contained" color="primary" disabled>
+              Share Report
+            </Button>
+          </div>
+        )}
       </Box>
     </Container>
-  );
-}
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div role="tabpanel" hidden={value !== index} {...other}>
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
   );
 }
