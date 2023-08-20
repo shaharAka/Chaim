@@ -1,55 +1,86 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Container, AppBar, Tabs, Tab, Box, Typography, TextField, Grid, Button } from '@mui/material';
 import Link from 'next/link';
-import { Tabs, Tab, Box, TextField, Button, TextareaAutosize, Paper } from '@mui/material';
 
 export default function Home() {
-  const [selectedTab, setSelectedTab] = useState(0);
-  const handleChange = (event, newValue) => setSelectedTab(newValue);
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
-    <Paper>
-      <Tabs value={selectedTab} onChange={handleChange} centered>
-        <Tab label="Patient Details" />
-        <Tab label="Analysis" />
-        <Tab label="Doctor Summary" />
-      </Tabs>
-      <TabPanel value={selectedTab} index={0}>
+    <Container>
+      <AppBar position="static">
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Patient Details" />
+          <Tab label="Analysis" />
+          <Tab label="Doctor Summary" />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+        <Typography variant="h5" gutterBottom>
+          Patient Details
+        </Typography>
         <form>
-          <TextField label="Name" fullWidth />
-          <TextField label="ID" fullWidth />
-          <TextField label="Age" fullWidth />
-          <TextField label="Sex" fullWidth />
-          {/* Add additional fields as needed */}
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField label="Name" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="ID" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="Age" variant="outlined" fullWidth type="number" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Sex"
+                variant="outlined"
+                select
+                fullWidth
+                SelectProps={{
+                  native: true,
+                }}
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </TextField>
+            </Grid>
+          </Grid>
         </form>
       </TabPanel>
-      <TabPanel value={selectedTab} index={1}>
+      <TabPanel value={value} index={1}>
         <Link href="/upload">
           <a>Upload an Image</a>
         </Link>
-        {/* You can include additional uploading functionality here */}
       </TabPanel>
-      <TabPanel value={selectedTab} index={2}>
-        <TextareaAutosize minRows={6} placeholder="Doctor's notes" style={{ width: '100%' }} />
-        <TextField label="Doctor Signature" fullWidth />
+      <TabPanel value={value} index={2}>
+        <TextField
+          label="Doctor's Summary"
+          multiline
+          rows={4}
+          variant="outlined"
+          fullWidth
+        />
         <Button variant="contained" color="primary" disabled>
           Share Report
         </Button>
       </TabPanel>
-    </Paper>
+    </Container>
   );
 }
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+
   return (
     <div role="tabpanel" hidden={value !== index} {...other}>
       {value === index && (
-        <Box p={3}>
-          {children}
+        <Box>
+          <Typography>{children}</Typography>
         </Box>
       )}
     </div>
   );
 }
-
-
