@@ -1,96 +1,76 @@
-import React, { useState } from 'react';
-import ImageSegmentor from '../components/ImageSegmentor.js';
-import { Button } from '@mui/material';
-import { Line } from 'react-chartjs-2';
+import React from 'react';
+import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import AnalysisIcon from '@mui/icons-material/BarChart'; // Replace with a suitable icon for Analysis
+import DoctorIcon from '@mui/icons-material/LocalHospital'; // Replace with a suitable icon for Doctor Summary
+import Link from 'next/link';
 
-// You can import simple-statistics to perform linear regression
-import { linearRegression } from 'simple-statistics';
+export default function Home() {
+  const [value, setValue] = React.useState(0);
 
-export default function UploadPage() {
-  const [imageSegmentors, setImageSegmentors] = useState([0]); 
-  const [segmentationComplete, setSegmentationComplete] = useState(false);
-
-  const [plotData, setPlotData] = useState({
-    labels: [],
-    datasets: [
-      {
-        label: 'Delta E Values',
-        data: [],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-      {
-        label: 'Constant Line at 100',
-        data: new Array(10).fill(100), // Assuming you have at most 10 data points
-        fill: false,
-        borderColor: 'red',
-        borderDash: [5, 5], // This creates a dashed line
-        tension: 0,
-      }
-    ],
-  });
-
-  // Handler to add a new ImageSegmentor component
-  const addImageSegmentor = () => {
-    setImageSegmentors([...imageSegmentors, imageSegmentors.length]);
-    setSegmentationComplete(false);
-  };
-
-  // Callback to mark segmentation as complete and update plot data
-  const handleSegmentationComplete = (deltaE, filename) => {
-    setPlotData(prevData => {
-      const newLabels = [...prevData.labels, `Segment ${filename}`];
-      const newData = [...prevData.datasets[0].data, deltaE];
-
-      // Compute linear regression
-      const linearFit = linearRegression(newData.map((y, x) => [x, y]));
-      const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
-
-
-      return {
-        labels: newLabels,
-        datasets: [
-          {
-            ...prevData.datasets[0],
-            data: newData,
-          },
-          prevData.datasets[1], // Keep the constant line
-          {
-            label: 'Linear Fit',
-            data: linearData,
-            fill: false,
-            borderColor: 'blue',
-            tension: 0.1,
-          },
-        ],
-      };
-    });
-    setSegmentationComplete(true);
+  const handleChange = (newValue) => {
+    setValue(newValue);
   };
 
   return (
-  <div>
-    <div style={{ display: 'flex' }}>
-      {imageSegmentors.map((segmentor, index) => (
-        <div key={index} style={{ marginRight: '16px' }}>
-          <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
-        </div>
-      ))}
-      {segmentationComplete && (
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ height: '400px', width: '400px' }}
-          onClick={addImageSegmentor}
-        >
-          +
-        </Button>
+    <Container>
+      <Drawer variant="permanent" open>
+        <List>
+          <ListItem button onClick={() => handleChange(0)}>
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText primary="Patient Details" />
+          </ListItem>
+          <ListItem button onClick={() => handleChange(1)}>
+            <ListItemIcon><AnalysisIcon /></ListItemIcon>
+            <ListItemText primary="Analysis" />
+          </ListItem>
+          <ListItem button onClick={() => handleChange(2)}>
+            <ListItemIcon><DoctorIcon /></ListItemIcon>
+            <ListItemText primary="Doctor Summary" />
+          </ListItem>
+        </List>
+      </Drawer>
+      <Box sx={{ marginLeft: 240 }}>
+        <TabPanel value={value} index={0}>
+          <Typography variant="h5" gutterBottom>
+            Patient Details
+          </Typography>
+          <form>
+            {/* Rest of the Patient Details Form */}
+          </form>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Link href="/upload">
+            <a>Upload an Image</a>
+          </Link>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <TextField
+            label="Doctor's Summary"
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+          />
+          <Button variant="contained" color="primary" disabled>
+            Share Report
+          </Button>
+        </TabPanel>
+      </Box>
+    </Container>
+  );
+}
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div role="tabpanel" hidden={value !== index} {...other}>
+      {value === index && (
+        <Box>
+          <Typography>{children}</Typography>
+        </Box>
       )}
     </div>
-    <div style={{ width: '600px', height: '300px' }}> {/* Set the constant width and height here */}
-      <Line data={plotData} />
-    </div>
-  </div>
-);
+  );
 }
