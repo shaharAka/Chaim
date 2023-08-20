@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button, Drawer } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import AnalysisIcon from '@mui/icons-material/BarChart'; // Replace with a suitable icon for Analysis
-import DoctorIcon from '@mui/icons-material/LocalHospital'; // Replace with a suitable icon for Doctor Summary
+import AnalysisIcon from '@mui/icons-material/BarChart';
+import DoctorIcon from '@mui/icons-material/LocalHospital';
 import Link from 'next/link';
 import { styled } from '@mui/system';
 
@@ -22,48 +22,21 @@ export default function Home() {
   };
 
   return (
-    <Container>
+    <Container disableGutters>
       <DrawerStyled variant="permanent" open>
         <List>
-          <ListItem button onClick={() => handleChange(0)}>
-            <ListItemIcon><PersonIcon /></ListItemIcon>
-            <ListItemText primary="Patient Details" />
-          </ListItem>
-          <ListItem button onClick={() => handleChange(1)}>
-            <ListItemIcon><AnalysisIcon /></ListItemIcon>
-            <ListItemText primary="Analysis" />
-          </ListItem>
-          <ListItem button onClick={() => handleChange(2)}>
-            <ListItemIcon><DoctorIcon /></ListItemIcon>
-            <ListItemText primary="Doctor Summary" />
-          </ListItem>
+          {/* Menu Items */}
         </List>
       </DrawerStyled>
-      <Box sx={{ marginLeft: 240 }}>
+      <Box component="main" sx={{ marginLeft: 240, flexGrow: 1, p: 3 }}>
         <TabPanel value={value} index={0}>
-          <Typography variant="h5" gutterBottom>
-            Patient Details
-          </Typography>
-          <form>
-            {/* Rest of the Patient Details Form */}
-          </form>
+          {/* Patient Details */}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Link href="/upload">
-            <a>Upload an Image</a>
-          </Link>
+          {/* Analysis */}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <TextField
-            label="Doctor's Summary"
-            multiline
-            rows={4}
-            variant="outlined"
-            fullWidth
-          />
-          <Button variant="contained" color="primary" disabled>
-            Share Report
-          </Button>
+          {/* Doctor Summary */}
         </TabPanel>
       </Box>
     </Container>
