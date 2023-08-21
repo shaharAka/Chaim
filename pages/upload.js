@@ -3,16 +3,15 @@ import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typ
 import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart';
 import DoctorIcon from '@mui/icons-material/LocalHospital';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-export default function Home({ params }) {
+export default function Home() {
   const [value, setValue] = React.useState(0);
-  const router = useRouter();
+  const { push } = useRouter();
 
   const handleChange = (newValue) => {
     if (newValue === 1) {
-      redirect('/upload');
+      push('/upload');
     } else {
       setValue(newValue);
     }
