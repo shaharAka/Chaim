@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button } from '@mui/material';
-import LeftMenu from './LeftMenu'; // Path to your LeftMenu component
+import LeftMenu from '../components/LeftMenu'; // Path to your LeftMenu component
 
 export default function Home() {
   const [value, setValue] = React.useState(0);
