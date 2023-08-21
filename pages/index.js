@@ -52,7 +52,40 @@ export default function Home() {
                 <Typography variant="h5" gutterBottom>
                   Patient Details
                 </Typography>
-                {/* rest of the form code */}
+                <form>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField label="Name" variant="outlined" fullWidth />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField label="ID" variant="outlined" fullWidth />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField label="Age" variant="outlined" fullWidth type="number" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Sex"
+                        variant="outlined"
+                        select
+                        fullWidth
+                        SelectProps={{
+                          native: true,
+                        }}
+                      >
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </TextField>
+                    </Grid>
+                  </Grid>
+                </form>
+              </div>
+            )}
+            {value === 1 && (
+              <div>
+                <Link href="/upload" passHref>
+                  <a>Upload an Image</a>
+                </Link>
               </div>
             )}
             {value === 2 && (
