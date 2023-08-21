@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typography, TextField, Grid, Button } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import AnalysisIcon from '@mui/icons-material/BarChart'; // Replace with a suitable icon for Analysis
-import DoctorIcon from '@mui/icons-material/LocalHospital'; // Replace with a suitable icon for Doctor Summary
+import AnalysisIcon from '@mui/icons-material/BarChart';
+import DoctorIcon from '@mui/icons-material/LocalHospital';
 import Link from 'next/link';
 
 export default function Home() {
@@ -20,10 +20,12 @@ export default function Home() {
             <ListItemIcon><PersonIcon /></ListItemIcon>
             <ListItemText primary="Patient Details" />
           </ListItem>
-          <ListItem button onClick={() => handleChange(1)}>
-            <ListItemIcon><AnalysisIcon /></ListItemIcon>
-            <ListItemText primary="Analysis" />
-          </ListItem>
+          <Link href="/upload" passHref>
+            <ListItem button component="a">
+              <ListItemIcon><AnalysisIcon /></ListItemIcon>
+              <ListItemText primary="Analysis" />
+            </ListItem>
+          </Link>
           <ListItem button onClick={() => handleChange(2)}>
             <ListItemIcon><DoctorIcon /></ListItemIcon>
             <ListItemText primary="Doctor Summary" />
@@ -31,46 +33,31 @@ export default function Home() {
         </List>
       </Drawer>
       <Box sx={{ marginLeft: 240 }}>
-        <TabPanel value={value} index={0}>
-          <Typography variant="h5" gutterBottom>
-            Patient Details
-          </Typography>
-          <form>
-            {/* Rest of the Patient Details Form */}
-          </form>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Link href="/upload">
-            <a>Upload an Image</a>
-          </Link>
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <TextField
-            label="Doctor's Summary"
-            multiline
-            rows={4}
-            variant="outlined"
-            fullWidth
-          />
-          <Button variant="contained" color="primary" disabled>
-            Share Report
-          </Button>
-        </TabPanel>
+        {value === 0 && (
+          <div>
+            <Typography variant="h5" gutterBottom>
+              Patient Details
+            </Typography>
+            <form>
+              {/* Rest of the Patient Details Form */}
+            </form>
+          </div>
+        )}
+        {value === 2 && (
+          <div>
+            <TextField
+              label="Doctor's Summary"
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
+            />
+            <Button variant="contained" color="primary" disabled>
+              Share Report
+            </Button>
+          </div>
+        )}
       </Box>
     </Container>
-  );
-}
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div role="tabpanel" hidden={value !== index} {...other}>
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
   );
 }
