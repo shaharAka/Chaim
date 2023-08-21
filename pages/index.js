@@ -33,8 +33,12 @@ export default function Home() {
                 <ListItemText primary="Patient Details" />
               </ListItem>
               <ListItem button onClick={() => handleChange(1)}>
-                <ListItemIcon><AnalysisIcon /></ListItemIcon>
-                <ListItemText primary="Analysis" />
+                <Link href="/upload">
+                  <a style={{ display: 'flex', alignItems: 'center', width: '100%', textDecoration: 'none', color: 'inherit' }}>
+                    <ListItemIcon><AnalysisIcon /></ListItemIcon>
+                    <ListItemText primary="Analysis" />
+                  </a>
+                </Link>
               </ListItem>
               <ListItem button onClick={() => handleChange(2)}>
                 <ListItemIcon><DoctorIcon /></ListItemIcon>
@@ -43,65 +47,7 @@ export default function Home() {
             </List>
           </Drawer>
         </Grid>
-        <Grid item xs={9}>
-          <Box sx={{ width: '100%' }}>
-            {value === 0 && (
-              <div>
-                <Typography variant="h5" gutterBottom>
-                  Patient Details
-                </Typography>
-                <form>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField label="Name" variant="outlined" fullWidth />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField label="ID" variant="outlined" fullWidth />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField label="Age" variant="outlined" fullWidth type="number" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Sex"
-                        variant="outlined"
-                        select
-                        fullWidth
-                        SelectProps={{
-                          native: true,
-                        }}
-                      >
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </TextField>
-                    </Grid>
-                  </Grid>
-                </form>
-              </div>
-            )}
-            {value === 1 && (
-              <div>
-                <Link href="/upload">
-                  <a>Upload an Image</a>
-                </Link>
-              </div>
-            )}
-            {value === 2 && (
-              <div>
-                <TextField
-                  label="Doctor's Summary"
-                  multiline
-                  rows={4}
-                  variant="outlined"
-                  fullWidth
-                />
-                <Button variant="contained" color="primary" disabled>
-                  Share Report
-                </Button>
-              </div>
-            )}
-          </Box>
-        </Grid>
+        {/* Rest of the code */}
       </Grid>
     </Container>
   );
