@@ -4,12 +4,18 @@ import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart';
 import DoctorIcon from '@mui/icons-material/LocalHospital';
 import Link from 'next/link';
+import { useRouter } from 'next/router'; 
 
 export default function Home() {
   const [value, setValue] = React.useState(0);
+  const router = useRouter();
 
   const handleChange = (newValue) => {
-    setValue(newValue);
+    if (newValue === 1) {
+      router.push('/upload'); // Navigate to the upload page if newValue is 1
+    } else {
+      setValue(newValue);
+    }
   };
 
   return (
