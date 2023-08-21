@@ -3,7 +3,7 @@ import { Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Typ
 import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart';
 import DoctorIcon from '@mui/icons-material/LocalHospital';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router'';
 
 export default function Home() {
   const [value, setValue] = React.useState(0);
