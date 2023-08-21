@@ -32,12 +32,10 @@ export default function Home() {
                 <ListItemIcon><PersonIcon /></ListItemIcon>
                 <ListItemText primary="Patient Details" />
               </ListItem>
-              <Link href="/upload" passHref>
-                <ListItem button component="a">
-                  <ListItemIcon><AnalysisIcon /></ListItemIcon>
-                  <ListItemText primary="Analysis" />
-                </ListItem>
-              </Link>
+              <ListItem button onClick={() => handleChange(1)}>
+                <ListItemIcon><AnalysisIcon /></ListItemIcon>
+                <ListItemText primary="Analysis" />
+              </ListItem>
               <ListItem button onClick={() => handleChange(2)}>
                 <ListItemIcon><DoctorIcon /></ListItemIcon>
                 <ListItemText primary="Doctor Summary" />
@@ -84,6 +82,7 @@ export default function Home() {
             {value === 1 && (
               <div>
                 <Link href="/upload" passHref>
+                  <a>Upload an Image</a>
                 </Link>
               </div>
             )}
