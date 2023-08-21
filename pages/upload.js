@@ -4,15 +4,15 @@ import PersonIcon from '@mui/icons-material/Person';
 import AnalysisIcon from '@mui/icons-material/BarChart';
 import DoctorIcon from '@mui/icons-material/LocalHospital';
 import Link from 'next/link';
-import { useRouter } from 'next/router'; 
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default function Home({ params }) {
   const [value, setValue] = React.useState(0);
   const router = useRouter();
 
   const handleChange = (newValue) => {
     if (newValue === 1) {
-      router.push('/upload'); // Navigate to the upload page if newValue is 1
+      redirect('/upload');
     } else {
       setValue(newValue);
     }
