@@ -83,8 +83,7 @@ export default function Home() {
             )}
             {value === 1 && (
               <div>
-                <Link href="/upload">
-                  <a>Upload an Image</a>
+                <Link href="/upload" passHref>
                 </Link>
               </div>
             )}
