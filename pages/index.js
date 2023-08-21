@@ -32,10 +32,12 @@ export default function Home() {
                 <ListItemIcon><PersonIcon /></ListItemIcon>
                 <ListItemText primary="Patient Details" />
               </ListItem>
-              <ListItem button onClick={() => handleChange(1)}>
-                <ListItemIcon><AnalysisIcon /></ListItemIcon>
-                <ListItemText primary="Analysis" />
-              </ListItem>
+              <Link href="/upload" passHref>
+                <ListItem button component="a">
+                  <ListItemIcon><AnalysisIcon /></ListItemIcon>
+                  <ListItemText primary="Analysis" />
+                </ListItem>
+              </Link>
               <ListItem button onClick={() => handleChange(2)}>
                 <ListItemIcon><DoctorIcon /></ListItemIcon>
                 <ListItemText primary="Doctor Summary" />
@@ -50,40 +52,7 @@ export default function Home() {
                 <Typography variant="h5" gutterBottom>
                   Patient Details
                 </Typography>
-                <form>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField label="Name" variant="outlined" fullWidth />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField label="ID" variant="outlined" fullWidth />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField label="Age" variant="outlined" fullWidth type="number" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Sex"
-                        variant="outlined"
-                        select
-                        fullWidth
-                        SelectProps={{
-                          native: true,
-                        }}
-                      >
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </TextField>
-                    </Grid>
-                  </Grid>
-                </form>
-              </div>
-            )}
-            {value === 1 && (
-              <div>
-                <Link href="/upload" passHref>
-                  <a>Upload an Image</a>
-                </Link>
+                {/* rest of the form code */}
               </div>
             )}
             {value === 2 && (
