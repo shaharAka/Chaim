@@ -61,10 +61,10 @@ export default function UploadPage() {
     setSegmentationComplete(true);
   };
 
-  return (
+   return (
     <div style={{ display: 'flex' }}>
       <LeftMenu />
-      <div>
+      <div style={{ marginLeft: '240px', flex: 1 }}>
         <div style={{ display: 'flex' }}>
           {imageSegmentors.map((segmentor, index) => (
             <div key={index} style={{ marginRight: '16px' }}>
