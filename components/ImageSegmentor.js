@@ -12,7 +12,8 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
   const [maskArea, setMaskArea] = useState();
   const [deltaEValue, setDeltaEValue] = useState();
   const [segmentationComplete, setSegmentationComplete] = useState(false);
-  const [isSegmenting, setIsSegmenting] = useState(false); // New state for managing when segmentation is happening
+  const [isSegmenting, setIsSegmenting] = useState(false); 
+  const [treatmentNumber, setTreatmentNumber] = useState('');
 
   const imgRef = useRef(null);
 
