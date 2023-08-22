@@ -34,12 +34,16 @@ export default function UploadPage() {
     setSegmentationComplete(false);
   };
 
-  const handleSegmentationComplete = (deltaE, filename) => {
+  const handleSegmentationComplete = (deltaE, filename, treatmentNumber) => {
     setPlotData(prevData => {
-      const newLabels = [...prevData.labels, `Segment ${filename}`];
+      const newLabels = [...prevData.labels, treatmentNumber]; // Use treatment numbers as labels
       const newData = [...prevData.datasets[0].data, deltaE];
       const linearFit = linearRegression(newData.map((y, x) => [x, y]));
       const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
+
+      // Calculation for the estimated remaining treatments
+      const estimatedRemainingTreatments = (100 - linearFit.b) / linearFit.m;
+
       return {
         labels: newLabels,
         datasets: [
@@ -56,12 +60,13 @@ export default function UploadPage() {
             tension: 0.1,
           },
         ],
+        estimatedRemainingTreatments,
       };
     });
     setSegmentationComplete(true);
   };
 
-   return (
+  return (
     <div style={{ display: 'flex' }}>
       <LeftMenu />
       <Container
@@ -77,7 +82,11 @@ export default function UploadPage() {
         <div style={{ display: 'flex', marginBottom: '16px' }}>
           {imageSegmentors.map((segmentor, index) => (
             <div key={index} style={{ marginRight: '16px' }}>
-              <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
+              <ImageSegmentor
+                onSegmentationComplete={(deltaE, filename) =>
+                  handleSegmentationComplete(deltaE, filename, segmentor + 1) // Pass the treatment number
+                }
+              />
             </div>
           ))}
           {segmentationComplete && (
@@ -94,6 +103,11 @@ export default function UploadPage() {
         <div style={{ width: '600px', height: '300px' }}>
           <Line data={plotData} />
         </div>
+        {plotData.estimatedRemainingTreatments && (
+          <div style={{ textAlign: 'right', marginTop: '16px', fontSize: '18px', fontWeight: 'bold' }}>
+            Estimated remaining treatments: {plotData.estimatedRemainingTreatments.toFixed(2)}
+          </div>
+        )}
       </Container>
     </div>
   );
