@@ -64,8 +64,17 @@ export default function UploadPage() {
    return (
     <div style={{ display: 'flex' }}>
       <LeftMenu />
-      <div style={{ marginLeft: '240px', flex: 1 }}>
-        <div style={{ display: 'flex' }}>
+      <Container
+        style={{
+          marginLeft: '240px',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <h1>Analysis</h1>
+        <div style={{ display: 'flex', marginBottom: '16px' }}>
           {imageSegmentors.map((segmentor, index) => (
             <div key={index} style={{ marginRight: '16px' }}>
               <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
@@ -85,7 +94,7 @@ export default function UploadPage() {
         <div style={{ width: '600px', height: '300px' }}>
           <Line data={plotData} />
         </div>
-      </div>
+      </Container>
     </div>
   );
 }
