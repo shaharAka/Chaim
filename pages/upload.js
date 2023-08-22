@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ImageSegmentor from '../components/ImageSegmentor.js';
 import LeftMenu from '../components/leftMenu';
-import { Button } from '@mui/material';
+import { Button, Container } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { linearRegression } from 'simple-statistics';
 
