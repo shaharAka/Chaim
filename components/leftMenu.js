@@ -4,7 +4,7 @@ import AnalysisIcon from '@mui/icons-material/BarChart';
 import DoctorIcon from '@mui/icons-material/LocalHospital';
 import Link from 'next/link';
 
-export default function LeftMenu({ onChange, value }) {
+export default function LeftMenu() {
   return (
     <Drawer
       variant="permanent"
@@ -18,20 +18,24 @@ export default function LeftMenu({ onChange, value }) {
       }}
     >
       <List>
-        <ListItem button onClick={() => onChange(0)}>
-          <ListItemIcon><PersonIcon /></ListItemIcon>
-          <ListItemText primary="Patient Details" />
-        </ListItem>
+        <Link href="/patientDetails" passHref>
+          <ListItem button component="a">
+            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemText primary="Patient Details" />
+          </ListItem>
+        </Link>
         <Link href="/upload" passHref>
           <ListItem button component="a">
             <ListItemIcon><AnalysisIcon /></ListItemIcon>
             <ListItemText primary="Analysis" />
           </ListItem>
         </Link>
-        <ListItem button onClick={() => onChange(2)}>
-          <ListItemIcon><DoctorIcon /></ListItemIcon>
-          <ListItemText primary="Doctor Summary" />
-        </ListItem>
+        <Link href="/doctorSummary" passHref>
+          <ListItem button component="a">
+            <ListItemIcon><DoctorIcon /></ListItemIcon>
+            <ListItemText primary="Doctor Summary" />
+          </ListItem>
+        </Link>
       </List>
     </Drawer>
   );
