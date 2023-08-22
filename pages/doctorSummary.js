@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Grid, Box, TextField, Button } from '@mui/material';
-import LeftMenu from '../components/LeftMenu';
+import LeftMenu from '../components/leftMenu';
 
 export default function DoctorSummary() {
   return (
