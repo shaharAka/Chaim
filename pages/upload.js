@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import ImageSegmentor from '../components/ImageSegmentor.js';
+import LeftMenu from '../components/leftMenu';
 import { Button } from '@mui/material';
 import { Line } from 'react-chartjs-2';
-// You can import simple-statistics to perform linear regression
 import { linearRegression } from 'simple-statistics';
+
 export default function UploadPage() {
-  const [imageSegmentors, setImageSegmentors] = useState([0]); 
+  const [imageSegmentors, setImageSegmentors] = useState([0]);
   const [segmentationComplete, setSegmentationComplete] = useState(false);
   const [plotData, setPlotData] = useState({
     labels: [],
@@ -19,25 +20,24 @@ export default function UploadPage() {
       },
       {
         label: 'Constant Line at 100',
-        data: new Array(10).fill(100), // Assuming you have at most 10 data points
+        data: new Array(10).fill(100),
         fill: false,
         borderColor: 'red',
-        borderDash: [5, 5], // This creates a dashed line
+        borderDash: [5, 5],
         tension: 0,
       }
     ],
   });
-  // Handler to add a new ImageSegmentor component
+
   const addImageSegmentor = () => {
     setImageSegmentors([...imageSegmentors, imageSegmentors.length]);
     setSegmentationComplete(false);
   };
-  // Callback to mark segmentation as complete and update plot data
+
   const handleSegmentationComplete = (deltaE, filename) => {
     setPlotData(prevData => {
       const newLabels = [...prevData.labels, `Segment ${filename}`];
       const newData = [...prevData.datasets[0].data, deltaE];
-      // Compute linear regression
       const linearFit = linearRegression(newData.map((y, x) => [x, y]));
       const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
       return {
@@ -47,7 +47,7 @@ export default function UploadPage() {
             ...prevData.datasets[0],
             data: newData,
           },
-          prevData.datasets[1], // Keep the constant line
+          prevData.datasets[1],
           {
             label: 'Linear Fit',
             data: linearData,
@@ -62,38 +62,30 @@ export default function UploadPage() {
   };
 
   return (
-  <div>
     <div style={{ display: 'flex' }}>
-      {imageSegmentors.map((segmentor, index) => (
-        <div key={index} style={{ marginRight: '16px' }}>
-
-    
-          
-            
-    
-
-          
-          Expand Down
-    
-    
-  
-          <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
+      <LeftMenu />
+      <div>
+        <div style={{ display: 'flex' }}>
+          {imageSegmentors.map((segmentor, index) => (
+            <div key={index} style={{ marginRight: '16px' }}>
+              <ImageSegmentor onSegmentationComplete={handleSegmentationComplete} />
+            </div>
+          ))}
+          {segmentationComplete && (
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ height: '400px', width: '400px' }}
+              onClick={addImageSegmentor}
+            >
+              +
+            </Button>
+          )}
         </div>
-      ))}
-      {segmentationComplete && (
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ height: '400px', width: '400px' }}
-          onClick={addImageSegmentor}
-        >
-          +
-        </Button>
-      )}
+        <div style={{ width: '600px', height: '300px' }}>
+          <Line data={plotData} />
+        </div>
+      </div>
     </div>
-    <div style={{ width: '600px', height: '300px' }}> {/* Set the constant width and height here */}
-      <Line data={plotData} />
-    </div>
-  </div>
-);
+  );
 }
