@@ -106,6 +106,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
         />
         {originalImageUrl && (
           <div>
+            <p>Select a bounding box around the wound</p> {/* Text added here */}
             <TextField
               label="Treatment Number"
               variant="outlined"
@@ -120,7 +121,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
                   color="primary"
                   style={{ width: '400px', display: 'block', margin: '10px 0' }}
                   onClick={segmentHandler}
-                  disabled={!treatmentNumber || isSegmenting}
+                  disabled={!treatmentNumber || !completedCrop || isSegmenting} {/* Condition updated here */}
                 >
                   {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
                 </Button>
