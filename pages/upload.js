@@ -35,7 +35,7 @@ export default function UploadPage() {
     setSegmentationComplete(false);
   };
 
-  const handleSegmentationComplete = (segmentor + 1, deltaE, filename) => {
+  const handleSegmentationComplete = (treatmentNumber, deltaE, filename) => {
     setPlotData(prevData => {
       const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
       const newData = [...prevData.datasets[0].data, deltaE];
@@ -84,7 +84,7 @@ export default function UploadPage() {
             <div key={index} style={{ marginRight: '16px' }}>
               <ImageSegmentor
                 onSegmentationComplete={(deltaE, filename) =>
-                  handleSegmentationComplete(deltaE, filename, segmentor + 1) // Pass the treatment number
+                  handleSegmentationComplete(segmentor + 1, deltaE, filename) // Pass the treatment number
                 }
               />
             </div>
