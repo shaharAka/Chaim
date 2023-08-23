@@ -35,7 +35,7 @@ export default function UploadPage() {
     setSegmentationComplete(false);
   };
 
-  const handleSegmentationComplete = (treatmentNumber, deltaE, filename) => {
+  const handleSegmentationComplete = (segmentor + 1, deltaE, filename) => {
     setPlotData(prevData => {
       const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
       const newData = [...prevData.datasets[0].data, deltaE];
