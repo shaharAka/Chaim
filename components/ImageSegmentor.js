@@ -74,7 +74,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
 
       console.log('Segmented successfully!');
       if (onSegmentationComplete) {
-        onSegmentationComplete(treatmentNumber, data.delta_e, filename);
+        onSegmentationComplete(treatmentNumber, data.delta_e, filename); // Fix the order of parameters
       }
       setSegmentationComplete(true);
     } else {
