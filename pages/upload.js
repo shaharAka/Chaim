@@ -36,6 +36,7 @@ export default function UploadPage() {
   };
 
   const handleSegmentationComplete = (treatmentNumber, deltaE, filename) => {
+      console.log(`Treatment Number: ${treatmentNumber}, Delta E: ${deltaE}`); // Logging the values
     setPlotData(prevData => {
       const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
       const newData = [...prevData.datasets[0].data, deltaE];
