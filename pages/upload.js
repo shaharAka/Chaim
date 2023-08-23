@@ -91,7 +91,7 @@ export default function UploadPage() {
           ))}
           {segmentationComplete && (
             <Button
-              variant="contained",
+              variant="contained"
               color="primary",
               style={{ height: '400px', width: '400px' }}
               onClick={addImageSegmentor}
