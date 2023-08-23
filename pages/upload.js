@@ -84,10 +84,11 @@ export default function UploadPage() {
           {imageSegmentors.map((segmentor, index) => (
             <div key={index} style={{ marginRight: '16px' }}>
               <ImageSegmentor
-                onSegmentationComplete={(deltaE, filename) =>
-                  handleSegmentationComplete(segmentor + 1, deltaE, filename) // Pass the treatment number
-                }
-              />
+                onSegmentationComplete={(treatmentNumber, deltaE, filename) =>
+                handleSegmentationComplete(treatmentNumber, deltaE, filename)
+                  }
+          />
+
             </div>
           ))}
           {segmentationComplete && (
