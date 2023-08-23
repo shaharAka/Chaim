@@ -28,22 +28,19 @@ export default function UploadPage() {
       }
     ],
   });
+  const [estimatedRemainingTreatments, setEstimatedRemainingTreatments] = useState();
 
   const addImageSegmentor = () => {
     setImageSegmentors([...imageSegmentors, imageSegmentors.length]);
     setSegmentationComplete(false);
   };
 
-  const handleSegmentationComplete = (deltaE, filename, treatmentNumber) => {
+  const handleSegmentationComplete = (treatmentNumber, deltaE, filename) => {
     setPlotData(prevData => {
-      const newLabels = [...prevData.labels, treatmentNumber]; // Use treatment numbers as labels
+      const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
       const newData = [...prevData.datasets[0].data, deltaE];
       const linearFit = linearRegression(newData.map((y, x) => [x, y]));
       const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
-
-      // Calculation for the estimated remaining treatments
-      const estimatedRemainingTreatments = (100 - linearFit.b) / linearFit.m;
-
       return {
         labels: newLabels,
         datasets: [
@@ -60,9 +57,12 @@ export default function UploadPage() {
             tension: 0.1,
           },
         ],
-        estimatedRemainingTreatments,
       };
     });
+
+    const remainingTreatments = (100 - plotData.datasets[0].data.reduce((a, b) => a + b, 0)) / treatmentNumber;
+    setEstimatedRemainingTreatments(remainingTreatments);
+
     setSegmentationComplete(true);
   };
 
@@ -91,8 +91,8 @@ export default function UploadPage() {
           ))}
           {segmentationComplete && (
             <Button
-              variant="contained"
-              color="primary"
+              variant="contained",
+              color="primary",
               style={{ height: '400px', width: '400px' }}
               onClick={addImageSegmentor}
             >
@@ -103,9 +103,9 @@ export default function UploadPage() {
         <div style={{ width: '600px', height: '300px' }}>
           <Line data={plotData} />
         </div>
-        {plotData.estimatedRemainingTreatments && (
+        {estimatedRemainingTreatments && (
           <div style={{ textAlign: 'right', marginTop: '16px', fontSize: '18px', fontWeight: 'bold' }}>
-            Estimated remaining treatments: {plotData.estimatedRemainingTreatments.toFixed(2)}
+            Estimated remaining treatments: {estimatedRemainingTreatments.toFixed(2)}
           </div>
         )}
       </Container>
