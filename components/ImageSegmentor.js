@@ -121,7 +121,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
                   color="primary"
                   style={{ width: '400px', display: 'block', margin: '10px 0' }}
                   onClick={segmentHandler}
-                  disabled={!treatmentNumber || !completedCrop || isSegmenting} {/* Condition updated here */}
+                  disabled={!treatmentNumber || !completedCrop || isSegmenting} 
                 >
                   {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
                 </Button>
