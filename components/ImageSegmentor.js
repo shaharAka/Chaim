@@ -164,4 +164,5 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
     )}
   </div>
 );
+}
 
