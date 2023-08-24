@@ -1,5 +1,5 @@
 import ImageUploader from './ImageUploader.js';
-import { Button, CircularProgress, TextField } from '@mui/material';
+import { Button, CircularProgress, TextField, , useMediaQuery } from '@mui/material';
 import React, { useState, useRef, useCallback } from 'react';
 
 export default function ImageSegmenter({ onSegmentationComplete, linearModel }) {
@@ -14,6 +14,8 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
   const [treatmentNumber, setTreatmentNumber] = useState('');
   const imgRef = useRef(null);
   const fileInputRef = useRef(null);
+    const isMobile = useMediaQuery('(max-width:600px)');
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -108,8 +110,9 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
   const estimatedRemainingTreatments = estimateRemainingTreatments();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <div>
+  <div style={{ display: 'flex', flexDirection: 'row' }}>
+    <div>
+      {isMobile ? (
         <input
           type="file"
           accept="image/*"
@@ -118,14 +121,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
           style={{ display: 'none' }}
           onChange={handleFileChange}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ width: '400px', display: 'block', margin: '10px 0' }}
-          onClick={() => fileInputRef.current.click()}
-        >
-          Capture or Select Image
-        </Button>
+      ) : (
         <ImageUploader
           onUpload={(name, url) => {
             setFilename(name);
@@ -134,45 +130,38 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
           setCompletedCrop={setCompletedCrop}
           onImageLoaded={onImageLoad}
         />
-        {originalImageUrl && (
-          <div>
-            <p>Select a bounding box around the wound</p>
-            <TextField
-              label="Treatment Number"
-              variant="outlined"
-              value={treatmentNumber}
-              onChange={(e) => setTreatmentNumber(e.target.value)}
-              style={{ width: '400px', margin: '10px 0' }}
-            />
-            <div style={{ textAlign: 'center' }}>
-              {!segmentationComplete && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ width: '400px', display: 'block', margin: '10px 0' }}
-                  onClick={segmentHandler}
-                  disabled={!treatmentNumber || !completedCrop || isSegmenting}
-                >
-                  {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
-                </Button>
-              )}
-              {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: "400px", height: "400px" }} />}
-              {maskArea !== undefined &&
-                <div className="info-box">
-                  <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
-                  <p>Delta E Value: {deltaEValue.toFixed(2)}</p>
-                </div>
-              }
-            </div>
-            {estimatedRemainingTreatments !== null && (
-              <div style={{ marginLeft: '20px', padding: '10px', border: '2px solid #000', borderRadius: '8px' }}>
-                <h3>Estimated remaining treatments:</h3>
-                <p style={{ fontSize: '18px' }}>{estimatedRemainingTreatments}</p>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      )}
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ width: '400px', display: 'block', margin: '10px 0' }}
+        onClick={() => fileInputRef.current.click()}
+      >
+        {isMobile ? 'Capture or Select Image' : 'Upload Image'}
+      </Button>
     </div>
-  );
-}
+    {originalImageUrl && (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img src={originalImageUrl} alt="Original" style={{ width: '400px', height: '400px' }} />
+        <TextField
+          variant="outlined"
+          label="Treatment Number"
+          type="number"
+          value={treatmentNumber}
+          onChange={e => setTreatmentNumber(e.target.value)}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ margin: '10px 0' }}
+          onClick={handleSegmentation}
+        >
+          Segment Image
+        </Button>
+        {segmenting && <CircularProgress />}
+        {deltaE !== undefined && <div>Delta E: {deltaE}</div>}
+      </div>
+    )}
+  </div>
+);
+
