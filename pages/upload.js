@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import ImageSegmentor from '../components/ImageSegmentor.js';
 import LeftMenu from '../components/leftMenu';
-import { Button, Container } from '@mui/material';
+import { Button, Container, useMediaQuery } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { linearRegression } from 'simple-statistics';
 
 export default function UploadPage() {
   const [imageSegmentors, setImageSegmentors] = useState([0]);
   const [segmentationComplete, setSegmentationComplete] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
   const [plotData, setPlotData] = useState({
     labels: [],
     datasets: [
@@ -69,12 +70,12 @@ export default function UploadPage() {
     setSegmentationComplete(true); // Moved inside the function
   };
 
-  return (
+   return (
     <div style={{ display: 'flex' }}>
       <LeftMenu />
       <Container
         style={{
-          marginLeft: '240px',
+          marginLeft: isMobile ? '0px' : '240px', // No margin left on mobile
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -82,7 +83,7 @@ export default function UploadPage() {
         }}
       >
         <h1>Analysis</h1>
-        <div style={{ display: 'flex', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', marginBottom: '16px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
           {imageSegmentors.map((segmentor, index) => (
             <div key={index} style={{ marginRight: '16px' }}>
               <ImageSegmentor
@@ -96,14 +97,14 @@ export default function UploadPage() {
             <Button
               variant="contained"
               color="primary"
-              style={{ height: '400px', width: '400px' }}
+              style={{ height: '400px', width: isMobile ? '100%' : '400px' }} // Full width on mobile
               onClick={addImageSegmentor}
             >
               +
             </Button>
           )}
         </div>
-        <div style={{ width: '600px', height: '300px' }}>
+        <div style={{ width: isMobile ? '100%' : '600px', height: '300px' }}> {/* Full width on mobile */}
           <Line data={plotData} />
         </div>
         {estimatedRemainingTreatments && (
