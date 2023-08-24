@@ -12,8 +12,21 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
   const [segmentationComplete, setSegmentationComplete] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
   const [treatmentNumber, setTreatmentNumber] = useState('');
-
   const imgRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Read the file and pass it to ImageUploader
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilename(file.name);
+        setOriginalImageUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onImageLoad = useCallback((img) => {
     imgRef.current = img;
@@ -75,7 +88,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
 
       console.log('Segmented successfully!');
       if (onSegmentationComplete) {
-        onSegmentationComplete(parseInt(treatmentNumber, 10), data.delta_e, filename); 
+        onSegmentationComplete(parseInt(treatmentNumber, 10), data.delta_e, filename);
       }
       setSegmentationComplete(true);
     } else {
@@ -97,6 +110,22 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <div>
+        <input
+          type="file"
+          accept="image/*"
+          capture="camera"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ width: '400px', display: 'block', margin: '10px 0' }}
+          onClick={() => fileInputRef.current.click()}
+        >
+          Capture or Select Image
+        </Button>
         <ImageUploader
           onUpload={(name, url) => {
             setFilename(name);
@@ -107,7 +136,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
         />
         {originalImageUrl && (
           <div>
-            <p>Select a bounding box around the wound</p> {/* Text added here */}
+            <p>Select a bounding box around the wound</p>
             <TextField
               label="Treatment Number"
               variant="outlined"
@@ -122,7 +151,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
                   color="primary"
                   style={{ width: '400px', display: 'block', margin: '10px 0' }}
                   onClick={segmentHandler}
-                  disabled={!treatmentNumber || !completedCrop || isSegmenting} 
+                  disabled={!treatmentNumber || !completedCrop || isSegmenting}
                 >
                   {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
                 </Button>
