@@ -37,38 +37,45 @@ export default function UploadPage() {
   };
 
   const handleSegmentationComplete = (treatmentNumber, deltaE, filename) => {
-    console.log(`Treatment Number: ${treatmentNumber}, Delta E: ${deltaE}`); // Logging the values
-    setPlotData(prevData => {
-      const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
-      const newData = [...prevData.datasets[0].data, deltaE];
-      const linearFit = linearRegression(newData.map((y, x) => [x, y]));
-      const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
-      const remainingTreatments = (100 - linearFit.b) / linearFit.m; // Correct calculation
-
-      return {
-        labels: newLabels,
-        datasets: [
-          {
-            ...prevData.datasets[0],
-            data: newData,
-          },
-          prevData.datasets[1],
-          {
-            label: 'Linear Fit',
-            data: linearData,
-            fill: false,
-            borderColor: 'blue',
-            tension: 0.1,
-          },
-        ],
-      };
-    });
+  console.log(`Treatment Number: ${treatmentNumber}, Delta E: ${deltaE}`); // Logging the values
+  setPlotData(prevData => {
+    const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
+    const newData = [...prevData.datasets[0].data, deltaE];
+    const linearFit = linearRegression(newData.map((y, x) => [x, y]));
+    const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
+    const remainingTreatments = (100 - linearFit.b) / linearFit.m; // Correct calculation
 
     // Set the remaining treatments
     setEstimatedRemainingTreatments(remainingTreatments);
 
-    setSegmentationComplete(true); // Moved inside the function
-  };
+    return {
+      labels: newLabels,
+      datasets: [
+        {
+          ...prevData.datasets[0],
+          data: newData,
+        },
+        prevData.datasets[1],
+        {
+          label: 'Linear Fit',
+          data: linearData,
+          fill: false,
+          borderColor: 'blue',
+          tension: 0.1,
+        },
+      ],
+    };
+  });
+
+  setSegmentationComplete(true); // Moved inside the function
+};
+Please replace the original handleSegmentationComplete function with this corrected version, and the error should be resolved.
+
+
+
+
+
+
 
    return (
     <div style={{ display: 'flex' }}>
