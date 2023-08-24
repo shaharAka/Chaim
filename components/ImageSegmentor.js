@@ -1,5 +1,5 @@
 import ImageUploader from './ImageUploader.js';
-import { Button, CircularProgress, TextField, , useMediaQuery } from '@mui/material';
+import { Button, CircularProgress, TextField, useMediaQuery } from '@mui/material';
 import React, { useState, useRef, useCallback } from 'react';
 
 export default function ImageSegmenter({ onSegmentationComplete, linearModel }) {
