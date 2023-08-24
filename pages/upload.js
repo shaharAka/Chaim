@@ -41,7 +41,7 @@ export default function UploadPage() {
   setPlotData(prevData => {
     const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
     const newData = [...prevData.datasets[0].data, deltaE];
-    const linearFit = linearRegression(newData.map((y, x) => [x, y]));
+    const linearFit = linearRegression(newData.map((y, x) => [x + 1, y]));
     const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
     const remainingTreatments = (100 - linearFit.b) / linearFit.m; // Correct calculation
 
