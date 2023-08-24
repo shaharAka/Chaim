@@ -69,13 +69,6 @@ export default function UploadPage() {
 
   setSegmentationComplete(true); // Moved inside the function
 };
-Please replace the original handleSegmentationComplete function with this corrected version, and the error should be resolved.
-
-
-
-
-
-
 
    return (
     <div style={{ display: 'flex' }}>
