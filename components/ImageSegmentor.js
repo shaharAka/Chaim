@@ -7,10 +7,22 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   const [filename, setFilename] = useState(null);
   const [treatmentNumber, setTreatmentNumber] = useState('');
   const [isSegmenting, setIsSegmenting] = useState(false);
-  const [deltaEValue, setDeltaEValue] = useState(null);
   const [isBoundingBoxSelected, setIsBoundingBoxSelected] = useState(false);
+  const [deltaEValue, setDeltaEValue] = useState(null);
   const isMobile = useMediaQuery('(max-width:600px)');
   const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setOriginalImageUrl(reader.result);
+        setFilename(file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const segmentHandler = async () => {
     setIsSegmenting(true);
