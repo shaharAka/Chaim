@@ -29,6 +29,8 @@ export default function UploadPage() {
     ],
   });
   const [estimatedRemainingTreatments, setEstimatedRemainingTreatments] = useState();
+  const [originalImageUrl, setOriginalImageUrl] = useState(null);
+  const [filename, setFilename] = useState(null);
 
   const addImageSegmentor = () => {
     setImageSegmentors([...imageSegmentors, imageSegmentors.length]);
@@ -83,6 +85,8 @@ export default function UploadPage() {
           {imageSegmentors.map((segmentor, index) => (
             <div key={index} style={{ marginRight: '16px' }}>
               <ImageSegmentor
+                originalImageUrl={originalImageUrl}
+                filename={filename}
                 onSegmentationComplete={(treatmentNumber, deltaE, filename) =>
                   handleSegmentationComplete(treatmentNumber, deltaE, filename)
                 }
