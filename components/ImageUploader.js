@@ -4,7 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Stack } from '@mui/material';
 
-export default function ImageUploader({ onUpload, setCompletedCrop, onImageLoaded }) {
+export default function ImageUploader({ onUpload, onBoundingBoxSelection, onImageLoaded }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [crop, setCrop] = useState({ aspect: 1 / 1 });
 
@@ -16,7 +16,6 @@ export default function ImageUploader({ onUpload, setCompletedCrop, onImageLoade
       const result = reader.result;
       setOriginalImageUrl(result);
       if (file) {
-        console.log('Calling onUpload:', file.name, result);
         onUpload(file.name, result); // Call onUpload here after reading is complete
       }
     };
@@ -43,7 +42,12 @@ export default function ImageUploader({ onUpload, setCompletedCrop, onImageLoade
               src={originalImageUrl}
               crop={crop}
               onChange={c => setCrop(c)}
-              onComplete={c => setCompletedCrop(c)}
+              onComplete={c => {
+                setCrop(c);
+                if (onBoundingBoxSelection) {
+                  onBoundingBoxSelection(c); // Call onBoundingBoxSelection here after crop is complete
+                }
+              }}
               onImageLoaded={onImageLoaded} // Use the onImageLoaded prop here
               style={{ maxWidth: '400px', maxHeight: '400px' }}
             />
