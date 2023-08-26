@@ -2,7 +2,9 @@ import React, { useState, useRef } from 'react';
 import { Button, CircularProgress, TextField, useMediaQuery } from '@mui/material';
 import ImageUploader from './ImageUploader.js';
 
-export default function ImageSegmentor({ onSegmentationComplete, originalImageUrl, filename }) {
+export default function ImageSegmentor({ onSegmentationComplete }) {
+  const [originalImageUrl, setOriginalImageUrl] = useState(null);
+  const [filename, setFilename] = useState(null);
   const [treatmentNumber, setTreatmentNumber] = useState('');
   const [isSegmenting, setIsSegmenting] = useState(false);
   const [deltaEValue, setDeltaEValue] = useState(null);
@@ -39,7 +41,7 @@ export default function ImageSegmentor({ onSegmentationComplete, originalImageUr
     setIsSegmenting(false);
   };
 
-  return (
+ return (
     <div>
       {isMobile ? (
         <>
@@ -49,7 +51,7 @@ export default function ImageSegmentor({ onSegmentationComplete, originalImageUr
             capture="camera"
             ref={fileInputRef}
             style={{ display: 'none' }}
-            // Remove this function since you're not using this code path in this component anymore
+            onChange={handleFileChange}
           />
           <Button
             variant="contained"
@@ -62,9 +64,8 @@ export default function ImageSegmentor({ onSegmentationComplete, originalImageUr
       ) : (
         <ImageUploader
           onUpload={(name, url) => {
-            // Comment these lines out, this part will be done in UploadPage.js
-            // setFilename(name);
-            // setOriginalImageUrl(url);
+            setFilename(name);
+            setOriginalImageUrl(url);
           }}
         />
       )}
