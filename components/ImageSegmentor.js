@@ -35,7 +35,6 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
       body: JSON.stringify({
         filename: filename,
         image: originalImageUrl,
-        // Replace scaledCrop with your actual variable
         crop: JSON.stringify({}),
       }),
     });
