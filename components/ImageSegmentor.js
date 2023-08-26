@@ -7,15 +7,14 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   const [filename, setFilename] = useState(null);
   const [treatmentNumber, setTreatmentNumber] = useState('');
   const [isSegmenting, setIsSegmenting] = useState(false);
-  const [isBoundingBoxSelected, setIsBoundingBoxSelected] = useState(false);
   const [deltaEValue, setDeltaEValue] = useState(null);
+  const [isBoundingBoxSelected, setIsBoundingBoxSelected] = useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
   const fileInputRef = useRef(null);
 
   const segmentHandler = async () => {
     setIsSegmenting(true);
 
-    // Your existing segmentation logic here
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
       headers: {
@@ -43,7 +42,6 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   };
 
   const handleBoundingBoxSelection = (completedCrop) => {
-    // Check if the bounding box is valid (you can add more conditions)
     if (completedCrop?.width > 0 && completedCrop?.height > 0) {
       setIsBoundingBoxSelected(true);
     } else {
@@ -51,7 +49,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     }
   };
 
- return (
+  return (
     <div>
       {isMobile ? (
         <>
@@ -61,7 +59,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
             capture="camera"
             ref={fileInputRef}
             style={{ display: 'none' }}
-            onChange={handleFileChange}
+            onChange={/* existing logic */}
           />
           <Button
             variant="contained"
@@ -77,6 +75,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
             setFilename(name);
             setOriginalImageUrl(url);
           }}
+          onBoundingBoxSelection={handleBoundingBoxSelection}
         />
       )}
 
