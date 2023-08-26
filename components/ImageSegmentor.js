@@ -72,7 +72,6 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
 
       {originalImageUrl && (
         <>
-          <img src={originalImageUrl} alt="Uploaded" style={{ width: '400px', height: '400px' }} />
           <TextField
             variant="outlined"
             label="Treatment Number"
