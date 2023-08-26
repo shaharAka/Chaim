@@ -7,7 +7,6 @@ import { linearRegression } from 'simple-statistics';
 
 export default function UploadPage() {
   const [imageSegmentors, setImageSegmentors] = useState([0]);
-  const [segmentationComplete, setSegmentationComplete] = useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
   const [plotData, setPlotData] = useState({
     labels: [],
@@ -33,49 +32,46 @@ export default function UploadPage() {
 
   const addImageSegmentor = () => {
     setImageSegmentors([...imageSegmentors, imageSegmentors.length]);
-    setSegmentationComplete(false);
   };
 
   const handleSegmentationComplete = (treatmentNumber, deltaE, filename) => {
-  console.log(`Treatment Number: ${treatmentNumber}, Delta E: ${deltaE}`); // Logging the values
-  setPlotData(prevData => {
-    const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
-    const newData = [...prevData.datasets[0].data, deltaE];
-    const linearFit = linearRegression(newData.map((y, x) => [x + 1, y]));
-    const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
-    const remainingTreatments = (100 - linearFit.b) / linearFit.m; // Correct calculation
+    setPlotData(prevData => {
+      const newLabels = [...prevData.labels, `Treatment ${treatmentNumber}`];
+      const newData = [...prevData.datasets[0].data, deltaE];
+      const linearFit = linearRegression(newData.map((y, x) => [x + 1, y]));
+      const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
+      const remainingTreatments = (100 - linearFit.b) / linearFit.m;
+      setEstimatedRemainingTreatments(remainingTreatments);
 
-    // Set the remaining treatments
-    setEstimatedRemainingTreatments(remainingTreatments);
+      return {
+        labels: newLabels,
+        datasets: [
+          {
+            label: 'Delta E Values',
+            data: newData,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1,
+          },
+          prevData.datasets[1],
+          {
+            label: 'Linear Fit',
+            data: linearData,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1,
+          }
+        ],
+      };
+    });
+  };
 
-    return {
-      labels: newLabels,
-      datasets: [
-        {
-          ...prevData.datasets[0],
-          data: newData,
-        },
-        prevData.datasets[1],
-        {
-          label: 'Linear Fit',
-          data: linearData,
-          fill: false,
-          borderColor: 'blue',
-          tension: 0.1,
-        },
-      ],
-    };
-  });
-
-  setSegmentationComplete(true); // Moved inside the function
-};
-
-   return (
+  return (
     <div style={{ display: 'flex' }}>
       <LeftMenu />
       <Container
         style={{
-          marginLeft: isMobile ? '0px' : '240px', // No margin left on mobile
+          marginLeft: isMobile ? '0px' : '240px',
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -88,23 +84,21 @@ export default function UploadPage() {
             <div key={index} style={{ marginRight: '16px' }}>
               <ImageSegmentor
                 onSegmentationComplete={(treatmentNumber, deltaE, filename) =>
-                handleSegmentationComplete(treatmentNumber, deltaE, filename)
-                  }
+                  handleSegmentationComplete(treatmentNumber, deltaE, filename)
+                }
               />
             </div>
           ))}
-          {segmentationComplete && (
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ height: '400px', width: isMobile ? '100%' : '400px' }} // Full width on mobile
-              onClick={addImageSegmentor}
-            >
-              +
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ height: '400px', width: isMobile ? '100%' : '400px' }}
+            onClick={addImageSegmentor}
+          >
+            +
+          </Button>
         </div>
-        <div style={{ width: isMobile ? '100%' : '600px', height: '300px' }}> {/* Full width on mobile */}
+        <div style={{ width: isMobile ? '100%' : '600px', height: '300px' }}>
           <Line data={plotData} />
         </div>
         {estimatedRemainingTreatments && (
