@@ -2,31 +2,17 @@ import React, { useState, useRef } from 'react';
 import { Button, CircularProgress, TextField, useMediaQuery } from '@mui/material';
 import ImageUploader from './ImageUploader.js';
 
-export default function ImageSegmenter({ onSegmentationComplete }) {
-  const [originalImageUrl, setOriginalImageUrl] = useState(null);
-  const [filename, setFilename] = useState(null);
+export default function ImageSegmentor({ onSegmentationComplete, originalImageUrl, filename }) {
   const [treatmentNumber, setTreatmentNumber] = useState('');
   const [isSegmenting, setIsSegmenting] = useState(false);
   const [deltaEValue, setDeltaEValue] = useState(null);
-
   const isMobile = useMediaQuery('(max-width:600px)');
   const fileInputRef = useRef(null);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFilename(file.name);
-        setOriginalImageUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const segmentHandler = async () => {
     setIsSegmenting(true);
-    // Your existing segmentation logic here (no changes made)
+
+    // Your existing segmentation logic here
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
       headers: {
@@ -35,7 +21,8 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       body: JSON.stringify({
         filename: filename,
         image: originalImageUrl,
-        crop: JSON.stringify(scaledCrop),  // Assuming scaledCrop is defined elsewhere in your code
+        // Replace scaledCrop with your actual variable
+        crop: JSON.stringify({}),
       }),
     });
 
@@ -62,7 +49,7 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
             capture="camera"
             ref={fileInputRef}
             style={{ display: 'none' }}
-            onChange={handleFileChange}
+            // Remove this function since you're not using this code path in this component anymore
           />
           <Button
             variant="contained"
@@ -75,8 +62,9 @@ export default function ImageSegmenter({ onSegmentationComplete }) {
       ) : (
         <ImageUploader
           onUpload={(name, url) => {
-            setFilename(name);
-            setOriginalImageUrl(url);
+            // Comment these lines out, this part will be done in UploadPage.js
+            // setFilename(name);
+            // setOriginalImageUrl(url);
           }}
         />
       )}
