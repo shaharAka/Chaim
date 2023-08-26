@@ -71,7 +71,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
             capture="camera"
             ref={fileInputRef}
             style={{ display: 'none' }}
-            onChange={/* existing logic */}
+            onChange={handleFileChange}
           />
           <Button
             variant="contained"
