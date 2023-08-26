@@ -7,6 +7,7 @@ import { linearRegression } from 'simple-statistics';
 
 export default function UploadPage() {
   const [imageSegmentors, setImageSegmentors] = useState([0]);
+  const [showAddButton, setShowAddButton] = useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
   const [plotData, setPlotData] = useState({
     labels: [],
@@ -34,6 +35,7 @@ export default function UploadPage() {
 
   const addImageSegmentor = () => {
     setImageSegmentors([...imageSegmentors, imageSegmentors.length]);
+    setShowAddButton(false);
   };
 
   const handleSegmentationComplete = (treatmentNumber, deltaE, filename) => {
@@ -43,6 +45,7 @@ export default function UploadPage() {
       const linearFit = linearRegression(newData.map((y, x) => [x + 1, y]));
       const linearData = newLabels.map((_, x) => linearFit.m * x + linearFit.b);
       const remainingTreatments = (100 - linearFit.b) / linearFit.m;
+      setShowAddButton(true);
       setEstimatedRemainingTreatments(remainingTreatments);
 
       return {
@@ -69,30 +72,27 @@ export default function UploadPage() {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <LeftMenu />
-      <Container
-        style={{
-          marginLeft: isMobile ? '0px' : '240px',
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <h1>Analysis</h1>
-        <div style={{ display: 'flex', marginBottom: '16px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
-          {imageSegmentors.map((segmentor, index) => (
-            <div key={index} style={{ marginRight: '16px' }}>
-              <ImageSegmentor
-                originalImageUrl={originalImageUrl}
-                filename={filename}
-                onSegmentationComplete={(treatmentNumber, deltaE, filename) =>
-                  handleSegmentationComplete(treatmentNumber, deltaE, filename)
-                }
-              />
-            </div>
-          ))}
+  <div style={{ display: 'flex' }}>
+    <LeftMenu />
+    <Container
+      style={{
+        marginLeft: isMobile ? '0px' : '240px',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <h1>Analysis</h1>
+      <div style={{ display: 'flex', marginBottom: '16px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+        {imageSegmentors.map((_, index) => (
+          <div key={index} style={{ marginRight: '16px' }}>
+            <ImageSegmentor
+              onSegmentationComplete={handleSegmentationComplete}
+            />
+          </div>
+        ))}
+        {showAddButton && (
           <Button
             variant="contained"
             color="primary"
@@ -101,16 +101,17 @@ export default function UploadPage() {
           >
             +
           </Button>
-        </div>
-        <div style={{ width: isMobile ? '100%' : '600px', height: '300px' }}>
-          <Line data={plotData} />
-        </div>
-        {estimatedRemainingTreatments && (
-          <div style={{ textAlign: 'right', marginTop: '16px', fontSize: '18px', fontWeight: 'bold' }}>
-            Estimated remaining treatments: {estimatedRemainingTreatments.toFixed(2)}
-          </div>
         )}
-      </Container>
-    </div>
-  );
-}
+      </div>
+      <div style={{ width: isMobile ? '100%' : '600px', height: '300px' }}>
+        <Line data={plotData} />
+      </div>
+      {estimatedRemainingTreatments && (
+        <div style={{ textAlign: 'right', marginTop: '16px', fontSize: '18px', fontWeight: 'bold' }}>
+          Estimated remaining treatments: {estimatedRemainingTreatments.toFixed(2)}
+        </div>
+      )}
+    </Container>
+  </div>
+);
+
