@@ -154,7 +154,7 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
           variant="contained"
           color="primary"
           style={{ margin: '10px 0' }}
-          onClick={handleSegmentation}
+          onClick={segmentHandler}
         >
           Segment Image
         </Button>
