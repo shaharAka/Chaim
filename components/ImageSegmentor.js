@@ -158,8 +158,8 @@ export default function ImageSegmenter({ onSegmentationComplete, linearModel }) 
         >
           Segment Image
         </Button>
-        {segmenting && <CircularProgress />}
-        {deltaE !== undefined && <div>Delta E: {deltaE}</div>}
+        {isSegmenting && <CircularProgress />}
+        {deltaEValue !== undefined && <div>Delta E: {deltaEValue}</div>}
       </div>
     )}
   </div>
