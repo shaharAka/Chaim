@@ -7,6 +7,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   const [filename, setFilename] = useState(null);
   const [treatmentNumber, setTreatmentNumber] = useState('');
   const [isSegmenting, setIsSegmenting] = useState(false);
+  const [isBoundingBoxSelected, setIsBoundingBoxSelected] = useState(false);
   const [deltaEValue, setDeltaEValue] = useState(null);
   const isMobile = useMediaQuery('(max-width:600px)');
   const fileInputRef = useRef(null);
@@ -39,6 +40,15 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     }
 
     setIsSegmenting(false);
+  };
+
+  const handleBoundingBoxSelection = (completedCrop) => {
+    // Check if the bounding box is valid (you can add more conditions)
+    if (completedCrop?.width > 0 && completedCrop?.height > 0) {
+      setIsBoundingBoxSelected(true);
+    } else {
+      setIsBoundingBoxSelected(false);
+    }
   };
 
  return (
@@ -79,10 +89,12 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
             value={treatmentNumber}
             onChange={(e) => setTreatmentNumber(e.target.value)}
           />
+          <div>Please select a bounding box around the wound.</div>
           <Button
             variant="contained"
             color="primary"
             onClick={segmentHandler}
+            disabled={!isBoundingBoxSelected || !treatmentNumber}
           >
             Segment!
           </Button>
