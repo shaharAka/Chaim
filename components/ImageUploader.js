@@ -1,5 +1,5 @@
 // ImageUploader.js
-import React, { useState } from 'react';
+import React, { useState, useCallback  } from 'react';
 import ReactCrop from 'react-image-crop';
 import { useDropzone } from 'react-dropzone';
 import 'react-image-crop/dist/ReactCrop.css';
