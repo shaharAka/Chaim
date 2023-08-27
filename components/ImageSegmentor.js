@@ -1,8 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import { Button, CircularProgress, TextField, useMediaQuery } from '@mui/material';
 import ImageUploader from './ImageUploader.js';
 
 export default function ImageSegmentor({ onSegmentationComplete }) {
+  const [originalImageWidth, setOriginalImageWidth] = useState(null);
+  const [originalImageHeight, setOriginalImageHeight] = useState(null);
+  const displayedImageWidth = 400; 
+  const displayedImageHeight = 400;
   const [originalImageUrl, setOriginalImageUrl] = useState(null);
   const [filename, setFilename] = useState(null);
   const [treatmentNumber, setTreatmentNumber] = useState('');
@@ -12,6 +16,17 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   const isMobile = useMediaQuery('(max-width:600px)');
   const [completedCrop, setCompletedCrop] = useState(null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (originalImageUrl) {
+      const img = new Image();
+      img.onload = function () {
+        setOriginalImageWidth(this.width);
+        setOriginalImageHeight(this.height);
+      };
+      img.src = originalImageUrl;
+    }
+  }, [originalImageUrl]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -29,6 +44,20 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     setIsSegmenting(true);
     console.log("Sending crop object: ", JSON.stringify(completedCrop));
 
+    if (originalImageWidth && originalImageHeight) {
+      const xScale = originalImageWidth / displayedImageWidth;
+      const yScale = originalImageHeight / displayedImageHeight;
+
+      const scaledCrop = {
+        x: completedCrop.x * xScale,
+        y: completedCrop.y * yScale,
+        width: completedCrop.width * xScale,
+        height: completedCrop.height * yScale,
+      };
+
+      console.log("Sending scaled crop object: ", JSON.stringify(scaledCrop));
+
+
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
       headers: {
@@ -37,7 +66,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
       body: JSON.stringify({
         filename: filename,
         image: originalImageUrl,
-        crop: JSON.stringify(completedCrop),
+        crop: JSON.stringify(scaledCrop),
       }),
     });
 
