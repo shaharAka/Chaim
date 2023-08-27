@@ -158,3 +158,4 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   </div>
 );
 
+
