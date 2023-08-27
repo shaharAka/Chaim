@@ -79,7 +79,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     } else {
       console.error('Segmentation failed.');
     }
-
+    }
     setIsSegmenting(false);
   };
 
