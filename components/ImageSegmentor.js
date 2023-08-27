@@ -26,6 +26,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
 
   const segmentHandler = async () => {
     setIsSegmenting(true);
+    console.log("Sending crop object: ", JSON.stringify(completedCrop));
 
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
@@ -35,7 +36,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
       body: JSON.stringify({
         filename: filename,
         image: originalImageUrl,
-        crop: JSON.stringify({}),
+        crop: JSON.stringify({completedCrop}),
       }),
     });
 
@@ -55,6 +56,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   const handleBoundingBoxSelection = (completedCrop) => {
     if (completedCrop?.width > 0 && completedCrop?.height > 0) {
       setIsBoundingBoxSelected(true);
+      setCompletedCrop(completedCrop);
     } else {
       setIsBoundingBoxSelected(false);
     }
