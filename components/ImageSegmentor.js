@@ -3,6 +3,7 @@ import { Button, CircularProgress, TextField, useMediaQuery } from '@mui/materia
 import ImageUploader from './ImageUploader.js';
 
 export default function ImageSegmentor({ onSegmentationComplete }) {
+  const [maskBase64, setMaskBase64] = useState(null);
   const [originalImageWidth, setOriginalImageWidth] = useState(null);
   const [originalImageHeight, setOriginalImageHeight] = useState(null);
   const displayedImageWidth = 400; 
@@ -73,6 +74,8 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     if (response.ok) {
       const data = await response.json();
       setDeltaEValue(data.delta_e);
+      setMaskBase64(data.mask_base64);
+      
       if (onSegmentationComplete) {
         onSegmentationComplete(parseInt(treatmentNumber, 10), data.delta_e, filename);
       }
@@ -93,58 +96,65 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   };
 
   return (
-    <div>
-      {isMobile ? (
-        <>
-          <input
-            type="file"
-            accept="image/*"
-            capture="camera"
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => fileInputRef.current.click()}
-          >
-            Capture or Select Image
-          </Button>
-        </>
-      ) : (
-        <ImageUploader
-          onUpload={(name, url) => {
-            setFilename(name);
-            setOriginalImageUrl(url);
-          }}
-          onBoundingBoxSelection={handleBoundingBoxSelection}
+  <div>
+    {isMobile ? (
+      <>
+        <input
+          type="file"
+          accept="image/*"
+          capture="camera"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
         />
-      )}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => fileInputRef.current.click()}
+        >
+          Capture or Select Image
+        </Button>
+      </>
+    ) : (
+      <ImageUploader
+        onUpload={(name, url) => {
+          setFilename(name);
+          setOriginalImageUrl(url);
+        }}
+        onBoundingBoxSelection={handleBoundingBoxSelection}
+      />
+    )}
 
-      {originalImageUrl && (
-        <>
-          <TextField
-            variant="outlined"
-            label="Treatment Number"
-            type="number"
-            value={treatmentNumber}
-            onChange={(e) => setTreatmentNumber(e.target.value)}
-          />
-          <div>Please select a bounding box around the wound.</div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={segmentHandler}
-            disabled={!isBoundingBoxSelected || !treatmentNumber}
-          >
-            Segment!
-          </Button>
-        </>
-      )}
+    {originalImageUrl && (
+      <>
+        <TextField
+          variant="outlined"
+          label="Treatment Number"
+          type="number"
+          value={treatmentNumber}
+          onChange={(e) => setTreatmentNumber(e.target.value)}
+        />
+        <div>Please select a bounding box around the wound.</div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={segmentHandler}
+          disabled={!isBoundingBoxSelected || !treatmentNumber}
+        >
+          Segment!
+        </Button>
+      </>
+    )}
 
-      {isSegmenting && <CircularProgress />}
-      {deltaEValue !== undefined && <div>Delta E: {deltaEValue}</div>}
-    </div>
-  );
-}
+    {isSegmenting && <CircularProgress />}
+    {deltaEValue !== undefined && <div>Delta E: {deltaEValue}</div>}
+
+    {/* This part is to display the mask image */}
+    {maskBase64 && (
+      <div>
+        <img src={`data:image/png;base64,${maskBase64}`} alt="Mask" />
+      </div>
+    )}
+  </div>
+);
+
