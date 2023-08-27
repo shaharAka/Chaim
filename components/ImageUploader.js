@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+// ImageUploader.js
+import React, { useState } from 'react';
 import ReactCrop from 'react-image-crop';
 import { useDropzone } from 'react-dropzone';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Stack } from '@mui/material';
 
-export default function ImageUploader({ onUpload, onBoundingBoxSelection, onImageLoaded }) {
+export default function ImageUploader({ onUpload, onBoundingBoxSelection }) {
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [crop, setCrop] = useState({ aspect: 1 / 1 });
 
@@ -16,7 +17,7 @@ export default function ImageUploader({ onUpload, onBoundingBoxSelection, onImag
       const result = reader.result;
       setOriginalImageUrl(result);
       if (file) {
-        onUpload(file.name, result); // Call onUpload here after reading is complete
+        onUpload(file.name, result);
       }
     };
 
@@ -43,12 +44,10 @@ export default function ImageUploader({ onUpload, onBoundingBoxSelection, onImag
               crop={crop}
               onChange={c => setCrop(c)}
               onComplete={c => {
-                setCrop(c);
                 if (onBoundingBoxSelection) {
-                  onBoundingBoxSelection(c); // Call onBoundingBoxSelection here after crop is complete
+                  onBoundingBoxSelection(c);
                 }
               }}
-              onImageLoaded={onImageLoaded} // Use the onImageLoaded prop here
               style={{ maxWidth: '400px', maxHeight: '400px' }}
             />
           </div>
