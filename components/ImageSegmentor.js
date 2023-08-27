@@ -10,6 +10,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   const [isBoundingBoxSelected, setIsBoundingBoxSelected] = useState(false);
   const [deltaEValue, setDeltaEValue] = useState(null);
   const isMobile = useMediaQuery('(max-width:600px)');
+  const [completedCrop, setCompletedCrop] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
@@ -36,7 +37,7 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
       body: JSON.stringify({
         filename: filename,
         image: originalImageUrl,
-        crop: JSON.stringify({completedCrop}),
+        crop: JSON.stringify(completedCrop),
       }),
     });
 
