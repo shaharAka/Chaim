@@ -1,4 +1,90 @@
-const mobileStyles = {
+import React, { useState, useRef } from 'react';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import LeftMenu from '../components/leftMenu';
+import { useMediaQuery } from '@mui/material';
+
+export default function UploadPage() {
+  const [selectedFile, setSelectedFile] = useState();
+  const [originalImageUrl, setOriginalImageUrl] = useState();
+  const [overlayImageUrl, setOverlayImageUrl] = useState();
+  const [filename, setFilename] = useState();
+  const [crop, setCrop] = useState({ aspect: 1/1 });
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const [maskArea, setMaskArea] = useState(); // State to hold the mask area
+  const imgRef = useRef(null);
+  const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
+  const isMobile = useMediaQuery('(max-width:600px)');
+
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    const response = await fetch('https://www.sunsolve.co/uploadfile/', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Server response:', data);
+      setOriginalImageUrl(data.original_image_url);
+      setFilename(selectedFile.name);
+      console.log('Uploaded successfully!');
+    } else {
+      console.error('Upload failed.');
+    }
+  };
+
+  const segmentHandler = async () => {
+    // Getting the scaling factors
+    const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
+    const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
+
+    // Scaling the coordinates
+    const scaledCrop = {
+      x: completedCrop.x * scaleX,
+      y: completedCrop.y * scaleY,
+      width: completedCrop.width * scaleX,
+      height: completedCrop.height * scaleY,
+      unit: completedCrop.unit,
+      aspect: completedCrop.aspect,
+    };
+
+    const response = await fetch('https://www.sunsolve.co/segment/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        filename: filename,
+        crop: JSON.stringify(scaledCrop), // Sending the scaled coordinates
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const maskBase64 = data.mask_base64;
+      setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
+      setMaskArea(data.mask_area_mm2); // Set the mask area
+      setDeltaEValue(data.delta_e);
+      console.log('Segmented successfully!');
+    } else {
+      console.error('Segmentation failed.');
+    }
+  };
+
+  const onLoad = (img) => {
+    imgRef.current = img;
+  };
+
+  const fileChangedHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const mobileStyles = {
     button: {
       padding: '15px 30px',
       fontSize: '1.2em',
@@ -51,3 +137,7 @@ const mobileStyles = {
     </div>
   );
 }
+
+
+
+
