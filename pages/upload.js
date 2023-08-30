@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import LeftMenu from '../components/leftMenu';
+import { useMediaQuery } from '@mui/material';
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
@@ -13,6 +14,7 @@ export default function UploadPage() {
   const [maskArea, setMaskArea] = useState(); // State to hold the mask area
   const imgRef = useRef(null);
   const [deltaEValue, setDeltaEValue] = useState(); // State to hold the Delta E value
+  const isMobile = useMediaQuery('(max-width:600px)');
 
 
   const submitHandler = async (event) => {
@@ -82,13 +84,29 @@ export default function UploadPage() {
     setSelectedFile(event.target.files[0]);
   };
 
+  const mobileStyles = {
+    button: {
+      padding: '15px 30px',
+      fontSize: '1.2em',
+    },
+    input: {
+      fontSize: '1.2em',
+    },
+    container: {
+      padding: '20px',
+    },
+    title: {
+      fontSize: '2em',
+    }
+  };
+
   return (
-    <div>
-      <LeftMenu />  {/* Add LeftMenu here */}
-      <h1>Upload Image</h1>
+    <div style={mobileStyles.container}>
+      <LeftMenu />
+      <h1 style={mobileStyles.title}>Upload Image</h1>
       <form onSubmit={submitHandler}>
-        <input type="file" onChange={fileChangedHandler} />
-        <button type="submit">Upload</button>
+        <input type="file" onChange={fileChangedHandler} style={mobileStyles.input} />
+        <button type="submit" style={mobileStyles.button}>Upload</button>
       </form>
       {originalImageUrl && 
         <div>
@@ -100,7 +118,7 @@ export default function UploadPage() {
             onComplete={c => setCompletedCrop(c)}
             style={{maxWidth: "400px", maxHeight: "400px"}}
           />
-          <button onClick={segmentHandler}>Segment!</button>
+          <button onClick={segmentHandler} style={mobileStyles.button}>Segment!</button>
         </div>}
       {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
       <div>
@@ -114,3 +132,9 @@ export default function UploadPage() {
     </div>
   );
 }
+
+
+
+
+
+
