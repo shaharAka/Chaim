@@ -46,16 +46,20 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     console.log("Sending crop object: ", JSON.stringify(completedCrop));
 
     if (originalImageWidth && originalImageHeight) {
-    console.log(`Original Image Dimensions: ${originalImageWidth}x${originalImageHeight}`); // This ensures width x height
+    console.log(`Original Image Dimensions: ${originalImageWidth}x${originalImageHeight}`);  // Log original dimensions
+    console.log(`Displayed Image Dimensions: ${displayedImageWidth}x${displayedImageHeight}`);  // Log displayed dimensions
+
 
     const xScale = originalImageWidth / displayedImageWidth;
     const yScale = originalImageHeight / displayedImageHeight;
 
+    console.log(`Scaling factors - x: ${xScale}, y: ${yScale}`);
+
     const scaledCrop = {
       x: completedCrop.x * xScale,
       y: completedCrop.y * yScale,
-      width: completedCrop.width * yScale,
-      height: completedCrop.height * xScale,
+      width: completedCrop.width * xScale,
+      height: completedCrop.height * yScale,
     };
 
       console.log("Sending scaled crop object: ", JSON.stringify(scaledCrop));
