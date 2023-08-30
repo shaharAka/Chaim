@@ -54,8 +54,8 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     const scaledCrop = {
       x: completedCrop.x * xScale,
       y: completedCrop.y * yScale,
-      width: completedCrop.width * xScale,
-      height: completedCrop.height * yScale,
+      width: completedCrop.width * yScale,
+      height: completedCrop.height * xScale,
     };
 
       console.log("Sending scaled crop object: ", JSON.stringify(scaledCrop));
