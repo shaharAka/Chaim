@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import LeftMenu from './LeftMenu'; 
+import LeftMenu from '../components/leftMenu';
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
