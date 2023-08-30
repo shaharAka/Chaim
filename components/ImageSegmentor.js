@@ -17,6 +17,8 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
   const isMobile = useMediaQuery('(max-width:600px)');
   const [completedCrop, setCompletedCrop] = useState(null);
   const fileInputRef = useRef(null);
+  const [actualDisplayedDimensions, setActualDisplayedDimensions] = useState({width: null, height: null});
+
 
   useEffect(() => {
     if (originalImageUrl) {
@@ -24,6 +26,10 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
       img.onload = function () {
         setOriginalImageWidth(this.width);
         setOriginalImageHeight(this.height);
+        setActualDisplayedDimensions({
+          width: this.width,  // Update with the actual displayed dimensions
+          height: this.height // Update with the actual displayed dimensions
+        });
       };
       img.src = originalImageUrl;
     }
@@ -50,8 +56,8 @@ export default function ImageSegmentor({ onSegmentationComplete }) {
     console.log(`Displayed Image Dimensions: ${displayedImageWidth}x${displayedImageHeight}`);  // Log displayed dimensions
 
 
-    const xScale = originalImageWidth / displayedImageWidth;
-    const yScale = originalImageHeight / displayedImageHeight;
+    const xScale = originalImageWidth / actualDisplayedDimensions.width;
+    const yScale = originalImageHeight / actualDisplayedDimensions.height;
 
     console.log(`Scaling factors - x: ${xScale}, y: ${yScale}`);
 
