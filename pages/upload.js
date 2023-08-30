@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import LeftMenu from './LeftMenu'; 
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState();
@@ -81,8 +82,9 @@ export default function UploadPage() {
     setSelectedFile(event.target.files[0]);
   };
 
-   return (
+  return (
     <div>
+      <LeftMenu />  {/* Add LeftMenu here */}
       <h1>Upload Image</h1>
       <form onSubmit={submitHandler}>
         <input type="file" onChange={fileChangedHandler} />
