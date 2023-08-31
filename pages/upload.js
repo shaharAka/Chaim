@@ -5,7 +5,7 @@ import LeftMenu from '../components/leftMenu';
 import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-function TreatmentSection({ treatment, index }) {
+function TreatmentSection({ treatment, index, treatments, setTreatments }) {
   const imgRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
@@ -192,7 +192,7 @@ export default function UploadPage() {
     <div style={mobileStyles.container}>
       <LeftMenu />
       {treatments.map((treatment, index) => (
-        <TreatmentSection key={treatment.id} treatment={treatment} index={index} />
+        <TreatmentSection key={treatment.id} treatment={treatment} index={index} treatments={treatments} setTreatments={setTreatments} />
       ))}
     </div>
   );
