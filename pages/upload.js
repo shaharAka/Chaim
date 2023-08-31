@@ -124,7 +124,7 @@ function TreatmentSection({ treatment, index, treatments, setTreatments }) {
       <AccordionDetails>
         <div style={{ width: '100%' }}>
           <h1>Upload Image</h1>
-          <form onSubmit={submitHandler}>
+          <form onSubmit={(event) => submitHandler(event, index)}>
             <input type="file" onChange={fileChangedHandler} />
             <button type="submit">
               {isUploading ? <CircularProgress size={24} /> : 'Upload'}
