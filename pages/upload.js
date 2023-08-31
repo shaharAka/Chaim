@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import LeftMenu from '../components/leftMenu';
-import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails, ExpandMoreIcon } from '@mui/material';
+import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function UploadPage() {
   const [isUploading, setIsUploading] = useState(false);
