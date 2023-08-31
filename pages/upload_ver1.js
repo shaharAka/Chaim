@@ -6,6 +6,7 @@ import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, Accordion
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function UploadPage() {
+  
   const [isUploading, setIsUploading] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
