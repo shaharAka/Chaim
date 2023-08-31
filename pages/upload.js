@@ -137,7 +137,13 @@ function TreatmentSection({ treatment, index, treatments, setTreatments }) {
               onImageLoaded={onLoad}
               crop={crop}
               onChange={(newCrop) => setCrop(newCrop)}
-              onComplete={(newCrop) => setCompletedCrop(newCrop)}
+              onComplete={(newCrop) => {
+                setCompletedCrop(newCrop);
+                const newTreatments = [...treatments];
+                newTreatments[index].completedCrop = newCrop;
+                setTreatments(newTreatments);
+              }}
+              
             />
           )}
           <button onClick={() => segmentHandler(index)}>
