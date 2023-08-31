@@ -106,66 +106,53 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   };
 
   return (
-    <Accordion>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+  <Accordion>
+    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
         <div>Treatment #{index + 1}</div>
-      </AccordionSummary>
-      <AccordionDetails>
-        <div style={{ width: '100%' }}>
-          <form onSubmit={submitHandler}>
-            <input type="file" onChange={fileChangedHandler} style={mobileStyles.input} />
-            <button type="submit" style={mobileStyles.button}>Upload</button>
-          </form>
-          {isUploading && <CircularProgress />}
-          {originalImageUrl && (
-            <ReactCrop
-              src={originalImageUrl}
-              onImageLoaded={onLoad}
-              crop={crop}
-              onChange={c => setCrop(c)}
-              onComplete={c => setCompletedCrop(c)}
-              style={{maxWidth: "400px", maxHeight: "400px"}}
-            />
-          )}
-          {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
-          {maskArea !== undefined && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>}
-          {deltaEValue !== undefined && <div>Delta E Value: {deltaEValue.toFixed(2)}</div>}
-          <button onClick={segmentHandler} style={mobileStyles.button}>
-            {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
-          </button>
-        </div>
-      </AccordionDetails>
-    </Accordion>
-  );
-};
+        {deltaEValue !== undefined && <span>Delta E Value: {deltaEValue.toFixed(2)}</span>}
+      </div>
+    </AccordionSummary>
+    <AccordionDetails>
+      <div style={{ width: '100%' }}>
+        <form onSubmit={submitHandler}>
+          <input type="file" onChange={fileChangedHandler} style={mobileStyles.input} />
+          <button type="submit" style={mobileStyles.button}>Upload</button>
+        </form>
+        {isUploading && <CircularProgress />}
+        {originalImageUrl && (
+          <ReactCrop
+            src={originalImageUrl}
+            onImageLoaded={onLoad}
+            crop={crop}
+            onChange={c => setCrop(c)}
+            onComplete={c => setCompletedCrop(c)}
+            style={{maxWidth: "400px", maxHeight: "400px"}}
+          />
+        )}
+        {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+        {maskArea !== undefined && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>}
+        <button onClick={segmentHandler} style={mobileStyles.button}>
+          {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
+        </button>
+      </div>
+    </AccordionDetails>
+  </Accordion>
+);
 
 export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const addSection = () => {
-    setSections([...sections, {}]);
-  };
-
   const onSegmentDone = () => {
-    addSection();  // Add a new section when segmentation is done
+    setSections([...sections, {}]);  // Add a new section when segmentation is done
   };
 
   return (
     <div>
       {sections.map((_, index) => (
-        <Accordion key={index}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <div>Treatment #{index + 1}</div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <TreatmentSection onSegmentDone={onSegmentDone} />
-          </AccordionDetails>
-        </Accordion>
+        <TreatmentSection index={index} onSegmentDone={onSegmentDone} key={index} />
       ))}
-      <Button variant="contained" color="primary" onClick={addSection}>
-        Add Another Treatment
-      </Button>
     </div>
   );
 }
