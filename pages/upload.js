@@ -105,6 +105,7 @@ function TreatmentSection({ treatment, index, treatments, setTreatments }) {
   };
 
   const fileChangedHandler = (event, treatmentIndex) => {
+    console.log("Received treatmentIndex:", treatmentIndex); 
   const selectedFile = event.target.files[0];
   const newTreatments = [...treatments];
 
@@ -125,7 +126,7 @@ function TreatmentSection({ treatment, index, treatments, setTreatments }) {
         <div style={{ width: '100%' }}>
           <h1>Upload Image</h1>
           <form onSubmit={(event) => submitHandler(event, index)}>
-            <input type="file" onChange={fileChangedHandler} />
+            <input type="file" onChange={(event) => fileChangedHandler(event, index)} />
             <button type="submit">
               {isUploading ? <CircularProgress size={24} /> : 'Upload'}
             </button>
@@ -139,7 +140,7 @@ function TreatmentSection({ treatment, index, treatments, setTreatments }) {
               onComplete={(newCrop) => setCompletedCrop(newCrop)}
             />
           )}
-          <button onClick={segmentHandler}>
+          <button onClick={() => segmentHandler(index)}>
             {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
           </button>
         </div>
