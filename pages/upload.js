@@ -139,7 +139,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
     </AccordionDetails>
   </Accordion>
 );
-
+};
 export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
   const isMobile = useMediaQuery('(max-width:600px)');
