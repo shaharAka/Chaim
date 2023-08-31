@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import LeftMenu from '../components/leftMenu';
-import { useMediaQuery } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import { useMediaQuery, CircularProgress } from '@mui/material';
 
 export default function UploadPage() {
   const [isUploading, setIsUploading] = useState(false);
