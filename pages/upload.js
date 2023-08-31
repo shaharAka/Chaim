@@ -5,6 +5,8 @@ import LeftMenu from '../components/leftMenu';
 import { useMediaQuery } from '@mui/material';
 
 export default function UploadPage() {
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSegmenting, setIsSegmenting] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
   const [originalImageUrl, setOriginalImageUrl] = useState();
   const [overlayImageUrl, setOverlayImageUrl] = useState();
@@ -19,8 +21,11 @@ export default function UploadPage() {
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    setIsUploading(true);
+    
     const formData = new FormData();
     formData.append('file', selectedFile);
+    
 
     const response = await fetch('https://www.sunsolve.co/uploadfile/', {
       method: 'POST',
@@ -33,12 +38,14 @@ export default function UploadPage() {
       setOriginalImageUrl(data.original_image_url);
       setFilename(selectedFile.name);
       console.log('Uploaded successfully!');
+      setIsUploading(false);
     } else {
       console.error('Upload failed.');
     }
   };
 
   const segmentHandler = async () => {
+    setIsSegmenting(true);
     // Getting the scaling factors
     const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
     const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
@@ -71,6 +78,7 @@ export default function UploadPage() {
       setMaskArea(data.mask_area_mm2); // Set the mask area
       setDeltaEValue(data.delta_e);
       console.log('Segmented successfully!');
+      setIsSegmenting(false);
     } else {
       console.error('Segmentation failed.');
     }
@@ -108,36 +116,42 @@ export default function UploadPage() {
     <div style={mobileStyles.container}>
       <LeftMenu />
       <h1 style={mobileStyles.title}>Upload Image</h1>
-      <form onSubmit={submitHandler}>
-        <input type="file" onChange={fileChangedHandler} style={mobileStyles.input} />
-        <button type="submit" style={mobileStyles.button}>Upload</button>
-      </form>
-      {originalImageUrl && 
+      {!originalImageUrl && (
+        <form onSubmit={submitHandler}>
+          <input type="file" onChange={fileChangedHandler} style={mobileStyles.input} />
+          <button type="submit" style={mobileStyles.button}>
+            {isUploading ? <CircularProgress size={24} /> : 'Upload'}
+          </button>
+        </form>
+      )}
+      {originalImageUrl && (
         <div>
           <ReactCrop
             src={originalImageUrl}
             onImageLoaded={onLoad}
             crop={crop}
-            onChange={c => setCrop(c)}
-            onComplete={c => setCompletedCrop(c)}
-            style={{maxWidth: "400px", maxHeight: "400px"}}
+            onChange={(c) => setCrop(c)}
+            onComplete={(c) => setCompletedCrop(c)}
+            style={{ maxWidth: '400px', maxHeight: '400px' }}
           />
           <div style={mobileStyles.guideText}>Drag a segmentation area around the wound</div>
-          <button onClick={segmentHandler} style={mobileStyles.button}>Segment!</button>
-        </div>}
-      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+          <button onClick={segmentHandler} style={mobileStyles.button}>
+            {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
+          </button>
+        </div>
+      )}
+      {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{ width: '400px', height: '400px' }} />}
       <div>
-        {maskArea !== undefined && 
+        {maskArea !== undefined && (
           <div className="info-box">
             <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>
-            <p>Delta E Value: {deltaEValue.toFixed(2)}</p> 
+            <p>Delta E Value: {deltaEValue.toFixed(2)}</p>
           </div>
-        }
-      </div> 
+        )}
+      </div>
     </div>
   );
 }
-
 
 
 
