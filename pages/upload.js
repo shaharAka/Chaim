@@ -18,6 +18,9 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const [maskArea, setMaskArea] = useState();
   const imgRef = useRef(null);
   const [deltaEValue, setDeltaEValue] = useState();
+  useEffect(() => {
+    console.log("Updated deltaEValue:", deltaEValue);
+  }, [deltaEValue]);
 
   const handleSegmentDone = () => {
     console.log('deltaEValue before calling onSegmentDone:', deltaEValue);
