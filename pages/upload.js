@@ -19,7 +19,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const imgRef = useRef(null);
   const [deltaEValue, setDeltaEValue] = useState();
   useEffect(() => {
-    console.log("Updated deltaEValue:", deltaEValue);
+    console.log("deltaEValue 1:", deltaEValue);
   }, [deltaEValue]);
   const handleSegmentDone = () => {
     console.log('deltaEValue before calling onSegmentDone:', deltaEValue);
@@ -92,7 +92,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
       setMaskArea(data.mask_area_mm2);
       setDeltaEValue(data.delta_e);
-      console.log("deltaEvalue from server", deltaEValue)
+      console.log("deltaEvalue 2", deltaEValue)
       setIsSegmenting(false);
       handleSegmentDone(); 
     } else {
