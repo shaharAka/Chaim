@@ -180,6 +180,10 @@ export default function UploadPage() {
     console.log('Current deltaE:', deltaEHistory[1])  
     console.log('Delta Difference:', deltaEDiff);  
     console.log('Treatments Needed:', treatmentsNeeded);
+    treatmentsNeeded = treatmentsNeeded > 0 ? Math.ceil(treatmentsNeeded) : Math.floor(treatmentsNeeded);
+  if (treatmentsNeeded === 0) {
+    treatmentsNeeded = 1;
+  }
     return treatmentsNeeded;
   };
 
