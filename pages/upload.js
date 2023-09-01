@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LeftMenu from '../components/leftMenu';
 
 
-const TreatmentSection = ({ index, onSegmentDone }) => {
+const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
@@ -17,7 +17,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const [completedCrop, setCompletedCrop] = useState(null);
   const [maskArea, setMaskArea] = useState();
   const imgRef = useRef(null);
-  const [deltaEValue, setDeltaEValue] = useState();
+  // const [deltaEValue, setDeltaEValue] = useState();
   useEffect(() => {
     console.log("Updated deltaEValue:", deltaEValue);
   }, [deltaEValue]);
@@ -164,6 +164,8 @@ export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
   const [deltaEHistory, setDeltaEHistory] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
+  const [deltaEValue, setDeltaEValue] = useState();
+
 
   useEffect(() => {
   console.log('deltaEHistory changed:', deltaEHistory);
@@ -197,21 +199,22 @@ export default function UploadPage() {
     console.log('Updated History:', updatedHistory);
     return updatedHistory;
   });
+    setDeltaEValue(newDeltaE);
 };
 
   const treatmentsNeeded = calculateLinearPrediction();
 
   return (
-    <div>
-      <LeftMenu />
-      {sections.map((_, index) => (
-        <TreatmentSection index={index} onSegmentDone={onSegmentDone} key={index} />
-      ))}
-      {treatmentsNeeded !== null && (
-        <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
-          Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
-        </div>
-      )}
-    </div>
-  );
+  <div>
+    <LeftMenu />
+    {sections.map((_, index) => (
+      <TreatmentSection index={index} onSegmentDone={onSegmentDone} deltaEValue={deltaEValue} setDeltaEValue={setDeltaEValue} key={index} />
+    ))}
+    {treatmentsNeeded !== null && (
+      <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
+        Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
+      </div>
+    )}
+  </div>
+);
 }
