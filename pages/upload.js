@@ -116,38 +116,39 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
     <AccordionSummary
       expandIcon={<ExpandMoreIcon />}
     >
-      <Typography>{`Treatment ${index + 1}`}</Typography>
+      <div>Treatment #{index + 1}</div>
+      {deltaEValue !== undefined && <span>Delta E Value: {deltaEValue.toFixed(2)}</span>}
     </AccordionSummary>
     <AccordionDetails>
-      <div>
-        <div>
-          {imageUrl ? (
-            <>
-              <ReactCrop
-                src={imageUrl}
-                crop={crop}
-                ruleOfThirds
-                onChange={(newCrop) => setCrop(newCrop)}
-              />
-            </>
-          ) : (
-            <>
-              <input type="file" accept="image/*" onChange={handleImage} />
-              <button onClick={handleUpload}>Upload</button>
-            </>
-          )}
-        </div>
-        {originalImageUrl && (
+      <div style={{ width: '100%' }}>
+        {!originalImageUrl ? (
+          <>
+            <form onSubmit={submitHandler}>
+              <input type="file" onChange={fileChangedHandler} style={mobileStyles.input} />
+              <button type="submit" style={mobileStyles.button}>Upload</button>
+            </form>
+            {isUploading && <CircularProgress />}
+          </>
+        ) : (
           <>
             <Typography variant="h6" style={{ color: 'black' }}>
               {index === 0 && 'Drag a box around the wound and click Segment!'}
             </Typography>
+            <ReactCrop
+              src={originalImageUrl}
+              onImageLoaded={onLoad}
+              crop={crop}
+              onChange={c => setCrop(c)}
+              onComplete={c => setCompletedCrop(c)}
+              style={{maxWidth: "400px", maxHeight: "400px"}}
+            />
             <button onClick={segmentHandler} style={mobileStyles.button}>
               {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
             </button>
           </>
         )}
-        {segmentedUrl && <img src={segmentedUrl} alt="Segmented" />}
+        {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
+        {maskArea !== undefined && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>}
       </div>
     </AccordionDetails>
   </Accordion>
