@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LeftMenu from '../components/leftMenu';
 
 
-const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }) => {
+const TreatmentSection = ({ index, onSegmentDone }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
@@ -17,17 +17,15 @@ const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }
   const [completedCrop, setCompletedCrop] = useState(null);
   const [maskArea, setMaskArea] = useState();
   const imgRef = useRef(null);
-  // const [deltaEValue, setDeltaEValue] = useState();
+  const [deltaEValue, setDeltaEValue] = useState();
   useEffect(() => {
     console.log("Updated deltaEValue:", deltaEValue);
   }, [deltaEValue]);
-
   const handleSegmentDone = () => {
     console.log('deltaEValue before calling onSegmentDone:', deltaEValue);
     onSegmentDone(deltaEValue);  
     console.log('handleSegmentDone executed, deltaE:', deltaEValue);
   };
-
   const isMobile = useMediaQuery('(max-width:600px)');
   const mobileStyles = {
     button: {
@@ -48,19 +46,15 @@ const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }
       fontWeight: 'bold',
     }
   };
-
   const submitHandler = async (event) => {
     event.preventDefault();
     setIsUploading(true);
-
     const formData = new FormData();
     formData.append('file', selectedFile);
-
     const response = await fetch('https://www.sunsolve.co/uploadfile/', {
       method: 'POST',
       body: formData,
     });
-
     if (response.ok) {
       const data = await response.json();
       setOriginalImageUrl(data.original_image_url);
@@ -70,7 +64,6 @@ const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }
       console.error('Upload failed.');
     }
   };
-
   const segmentHandler = async () => {
     setIsSegmenting(true);
     const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
@@ -83,7 +76,6 @@ const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }
       unit: completedCrop.unit,
       aspect: completedCrop.aspect,
     };
-
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
       headers: {
@@ -94,7 +86,6 @@ const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }
         crop: JSON.stringify(scaledCrop),
       }),
     });
-
     if (response.ok) {
       const data = await response.json();
       const maskBase64 = data.mask_base64;
@@ -108,15 +99,12 @@ const TreatmentSection = ({ index, onSegmentDone, setDeltaEValue, deltaEValue  }
       console.error('Segmentation failed.');
     }
   };
-
   const onLoad = (img) => {
     imgRef.current = img;
   };
-
   const fileChangedHandler = (event) => {
     setSelectedFile(event.target.files[0]);
   };
-
   return (
   <Accordion>
     <AccordionSummary
@@ -164,13 +152,10 @@ export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
   const [deltaEHistory, setDeltaEHistory] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
-  const [deltaEValue, setDeltaEValue] = useState();
-
 
   useEffect(() => {
   console.log('deltaEHistory changed:', deltaEHistory);
 }, [deltaEHistory]);
-
   const calculateLinearPrediction = () => {
     if (deltaEHistory.length < 2) {
       console.log('DeltaE history is too short', deltaEHistory)
@@ -188,7 +173,6 @@ export default function UploadPage() {
   }
     return treatmentsNeeded;
   };
-
   const onSegmentDone = (newDeltaE) => {
   console.log('Received newDeltaE:', newDeltaE);
   console.log('Current deltaEHistory before setting:', deltaEHistory);
@@ -199,22 +183,21 @@ export default function UploadPage() {
     console.log('Updated History:', updatedHistory);
     return updatedHistory;
   });
-    setDeltaEValue(newDeltaE);
 };
 
   const treatmentsNeeded = calculateLinearPrediction();
 
   return (
-  <div>
-    <LeftMenu />
-    {sections.map((_, index) => (
-      <TreatmentSection index={index} onSegmentDone={onSegmentDone} deltaEValue={deltaEValue} setDeltaEValue={setDeltaEValue} key={index} />
-    ))}
-    {treatmentsNeeded !== null && (
-      <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
-        Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
-      </div>
-    )}
-  </div>
-);
+    <div>
+      <LeftMenu />
+      {sections.map((_, index) => (
+        <TreatmentSection index={index} onSegmentDone={onSegmentDone} key={index} />
+      ))}
+      {treatmentsNeeded !== null && (
+        <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
+          Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
+        </div>
+      )}
+    </div>
+  );
 }
