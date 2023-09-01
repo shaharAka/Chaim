@@ -96,7 +96,6 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       setMaskArea(data.mask_area_mm2);
       setDeltaEValue(data.delta_e);
       setIsSegmenting(false);
-      onSegmentDone(); 
       handleSegmentDone(); 
     } else {
       console.error('Segmentation failed.');
