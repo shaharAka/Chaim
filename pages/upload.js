@@ -178,10 +178,17 @@ export default function UploadPage() {
   };
 
   const onSegmentDone = (newDeltaE) => {
-    console.log('onSegmentDone newDeltaE:', newDeltaE);
-    setSections([...sections, {}]);
-    setDeltaEHistory([...deltaEHistory, newDeltaE]);
-  };
+  console.log('Received newDeltaE:', newDeltaE);
+  console.log('Current deltaEHistory before setting:', deltaEHistory);
+  
+  setSections([...sections, {}]);
+  setDeltaEHistory(prevHistory => {
+  console.log('Previous History:', prevHistory);
+  const updatedHistory = [...prevHistory, newDeltaE];
+  console.log('Updated History:', updatedHistory);
+  return updatedHistory;
+  });
+};
 
   const treatmentsNeeded = calculateLinearPrediction();
 
