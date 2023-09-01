@@ -98,7 +98,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       setMaskArea(data.mask_area_mm2);
       setDeltaEValue(data.delta_e);
       setIsSegmenting(false);
-      handleSegmentDone(); 
+      handleSegmentDone(data.delta_e); 
     } else {
       console.error('Segmentation failed.');
     }
@@ -181,7 +181,6 @@ export default function UploadPage() {
     console.log('onSegmentDone newDeltaE:', newDeltaE);
     setSections([...sections, {}]);
     setDeltaEHistory([...deltaEHistory, newDeltaE]);
-    setExpandedSection(null); 
   };
 
   const treatmentsNeeded = calculateLinearPrediction();
