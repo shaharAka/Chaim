@@ -5,6 +5,11 @@ import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, Accordion
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LeftMenu from '../components/leftMenu';
 
+useEffect(() => {
+  console.log('deltaEHistory changed:', deltaEHistory);
+}, [deltaEHistory]);
+
+
 const TreatmentSection = ({ index, onSegmentDone }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
@@ -19,6 +24,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const [deltaEValue, setDeltaEValue] = useState();
 
   const handleSegmentDone = () => {
+    console.log('handleSegmentDone executed, deltaE:', deltaEValue);
     onSegmentDone(deltaEValue);  
   };
 
@@ -172,8 +178,10 @@ export default function UploadPage() {
   };
 
   const onSegmentDone = (newDeltaE) => {
+    console.log('onSegmentDone newDeltaE:', newDeltaE);
     setSections([...sections, {}]);
     setDeltaEHistory([...deltaEHistory, newDeltaE]);
+    setExpandedSection(null); 
   };
 
   const treatmentsNeeded = calculateLinearPrediction();
