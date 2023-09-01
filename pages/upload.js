@@ -165,6 +165,10 @@ export default function UploadPage() {
     }
     const deltaEDiff = deltaEHistory[1] - deltaEHistory[0];
     const treatmentsNeeded = Math.ceil((deltaEHistory[1]-100) / deltaEDiff);
+    console.log('Previous deltaE:', deltaEHistory[0])
+    console.log('Current deltaE:', deltaEHistory[1])  
+    console.log('Delta Difference:', deltaEDiff);  
+    console.log('Treatments Needed:', treatmentsNeeded);
     return treatmentsNeeded;
   };
 
