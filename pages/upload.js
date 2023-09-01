@@ -5,10 +5,6 @@ import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, Accordion
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LeftMenu from '../components/leftMenu';
 
-useEffect(() => {
-  console.log('deltaEHistory changed:', deltaEHistory);
-}, [deltaEHistory]);
-
 
 const TreatmentSection = ({ index, onSegmentDone }) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -163,6 +159,10 @@ export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
   const [deltaEHistory, setDeltaEHistory] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
+
+  useEffect(() => {
+  console.log('deltaEHistory changed:', deltaEHistory);
+}, [deltaEHistory]);
 
   const calculateLinearPrediction = () => {
     if (deltaEHistory.length < 2) {
