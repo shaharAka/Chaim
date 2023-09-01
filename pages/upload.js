@@ -20,8 +20,9 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const [deltaEValue, setDeltaEValue] = useState();
 
   const handleSegmentDone = () => {
-    console.log('handleSegmentDone executed, deltaE:', deltaEValue);
+    console.log('deltaEValue before calling onSegmentDone:", deltaEValue)
     onSegmentDone(deltaEValue);  
+    console.log('handleSegmentDone executed, deltaE:', deltaEValue);
   };
 
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -97,6 +98,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
       setMaskArea(data.mask_area_mm2);
       setDeltaEValue(data.delta_e);
+      console.log("deltaEvalue from server", delteEValue)
       setIsSegmenting(false);
       handleSegmentDone(); 
     } else {
@@ -183,10 +185,9 @@ export default function UploadPage() {
   
   setSections([...sections, {}]);
   setDeltaEHistory(prevHistory => {
-  console.log('Previous History:', prevHistory);
-  const updatedHistory = [...prevHistory, newDeltaE];
-  console.log('Updated History:', updatedHistory);
-  return updatedHistory;
+    const updatedHistory = [...prevHistory, newDeltaE];
+    console.log('Updated History:', updatedHistory);
+    return updatedHistory;
   });
 };
 
