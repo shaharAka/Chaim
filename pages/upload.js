@@ -171,6 +171,7 @@ export default function UploadPage() {
 
   const calculateLinearPrediction = () => {
     if (deltaEHistory.length < 2) {
+      console.log('DeltaE history is too short', deltaEHistory)
       return null;
     }
     const deltaEDiff = deltaEHistory[1] - deltaEHistory[0];
