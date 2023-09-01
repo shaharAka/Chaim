@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Button, Typography  } from '@mui/material';
