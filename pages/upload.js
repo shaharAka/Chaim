@@ -3,6 +3,7 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LeftMenu from '../components/leftMenu';
 
 const TreatmentSection = ({ index, onSegmentDone }) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -16,6 +17,10 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const [maskArea, setMaskArea] = useState();
   const imgRef = useRef(null);
   const [deltaEValue, setDeltaEValue] = useState();
+
+  const handleSegmentDone = () => {
+    onSegmentDone(deltaEValue);  
+  };
 
   const isMobile = useMediaQuery('(max-width:600px)');
   const mobileStyles = {
@@ -91,7 +96,8 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       setMaskArea(data.mask_area_mm2);
       setDeltaEValue(data.delta_e);
       setIsSegmenting(false);
-      onSegmentDone();  // Notify the parent component that the segmentation is done
+      onSegmentDone(); 
+      handleSegmentDone(); 
     } else {
       console.error('Segmentation failed.');
     }
@@ -137,22 +143,41 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
         </button>
       </div>
     </AccordionDetails>
+      {index === 0 && <Typography variant="h6" style={{ color: 'red' }}>Drag a box around the wound and click 'Segment!'</Typography>}
   </Accordion>
 );
 };
 export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
+  const [deltaEHistory, setDeltaEHistory] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const onSegmentDone = () => {
-    setSections([...sections, {}]);  // Add a new section when segmentation is done
+  const calculateLinearPrediction = () => {
+    if (deltaEHistory.length < 2) {
+      return null;
+    }
+    const deltaEDiff = deltaEHistory[1] - deltaEHistory[0];
+    const treatmentsNeeded = Math.ceil((100 - deltaEHistory[1]) / deltaEDiff);
+    return treatmentsNeeded;
   };
+
+  const onSegmentDone = (newDeltaE) => {
+    setSections([...sections, {}]);
+    setDeltaEHistory([...deltaEHistory, newDeltaE]);
+  };
+
+  const treatmentsNeeded = calculateLinearPrediction();
 
   return (
     <div>
       {sections.map((_, index) => (
         <TreatmentSection index={index} onSegmentDone={onSegmentDone} key={index} />
       ))}
+      {treatmentsNeeded !== null && (
+        <div style={{ backgroundColor: 'yellow', color: 'red', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
+          Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
+        </div>
+      )}
     </div>
   );
 }
