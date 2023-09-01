@@ -19,7 +19,9 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const imgRef = useRef(null);
   const [deltaEValue, setDeltaEValue] = useState();
   useEffect(() => {
-    console.log("deltaEValue 1:", deltaEValue);
+    if (deltaEValue !== undefined) {
+      handleSegmentDone();
+    }
   }, [deltaEValue]);
   const handleSegmentDone = () => {
     console.log('deltaEValue before calling onSegmentDone:', deltaEValue);
@@ -94,7 +96,6 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       setDeltaEValue(data.delta_e);
       console.log("deltaEvalue 2", deltaEValue)
       setIsSegmenting(false);
-      handleSegmentDone(); 
     } else {
       console.error('Segmentation failed.');
     }
