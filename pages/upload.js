@@ -113,37 +113,43 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
 
   return (
   <Accordion>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <div>Treatment #{index + 1}</div>
-        {deltaEValue !== undefined && <span>Delta E Value: {deltaEValue.toFixed(2)}</span>}
-      </div>
+    <AccordionSummary
+      expandIcon={<ExpandMoreIcon />}
+    >
+      <Typography>{`Treatment ${index + 1}`}</Typography>
     </AccordionSummary>
     <AccordionDetails>
-      <div style={{ width: '100%' }}>
-        <form onSubmit={submitHandler}>
-          <input type="file" onChange={fileChangedHandler} style={mobileStyles.input} />
-          <button type="submit" style={mobileStyles.button}>Upload</button>
-        </form>
-        {isUploading && <CircularProgress />}
+      <div>
+        <div>
+          {imageUrl ? (
+            <>
+              <ReactCrop
+                src={imageUrl}
+                crop={crop}
+                ruleOfThirds
+                onChange={(newCrop) => setCrop(newCrop)}
+              />
+            </>
+          ) : (
+            <>
+              <input type="file" accept="image/*" onChange={handleImage} />
+              <button onClick={handleUpload}>Upload</button>
+            </>
+          )}
+        </div>
         {originalImageUrl && (
-          <ReactCrop
-            src={originalImageUrl}
-            onImageLoaded={onLoad}
-            crop={crop}
-            onChange={c => setCrop(c)}
-            onComplete={c => setCompletedCrop(c)}
-            style={{maxWidth: "400px", maxHeight: "400px"}}
-          />
+          <>
+            <Typography variant="h6" style={{ color: 'black' }}>
+              {index === 0 && 'Drag a box around the wound and click Segment!'}
+            </Typography>
+            <button onClick={segmentHandler} style={mobileStyles.button}>
+              {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
+            </button>
+          </>
         )}
-        {overlayImageUrl && <img src={overlayImageUrl} alt="Overlay" style={{width: "400px", height: "400px"}} />}
-        {maskArea !== undefined && <div>Mask Area: {maskArea.toFixed(2)} mm<sup>2</sup></div>}
-        <button onClick={segmentHandler} style={mobileStyles.button}>
-          {isSegmenting ? <CircularProgress size={24} /> : 'Segment!'}
-        </button>
+        {segmentedUrl && <img src={segmentedUrl} alt="Segmented" />}
       </div>
     </AccordionDetails>
-      {index === 0 && <Typography variant="h6" style={{ color: 'red' }}>Drag a box around the wound and click 'Segment!'</Typography>}
   </Accordion>
 );
 };
@@ -157,7 +163,7 @@ export default function UploadPage() {
       return null;
     }
     const deltaEDiff = deltaEHistory[1] - deltaEHistory[0];
-    const treatmentsNeeded = Math.ceil((100 - deltaEHistory[1]) / deltaEDiff);
+    const treatmentsNeeded = Math.ceil((deltaEHistory[1]-100) / deltaEDiff);
     return treatmentsNeeded;
   };
 
@@ -170,6 +176,7 @@ export default function UploadPage() {
 
   return (
     <div>
+      <LeftMenu />
       {sections.map((_, index) => (
         <TreatmentSection index={index} onSegmentDone={onSegmentDone} key={index} />
       ))}
