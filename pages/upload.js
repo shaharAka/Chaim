@@ -98,7 +98,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       setOverlayImageUrl(`data:image/png;base64,${maskBase64}`);
       setMaskArea(data.mask_area_mm2);
       setDeltaEValue(data.delta_e);
-      console.log("deltaEvalue from server", delteEValue)
+      console.log("deltaEvalue from server", deltaEValue)
       setIsSegmenting(false);
       handleSegmentDone(); 
     } else {
