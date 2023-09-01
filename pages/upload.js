@@ -185,7 +185,7 @@ export default function UploadPage() {
         <TreatmentSection index={index} onSegmentDone={onSegmentDone} key={index} />
       ))}
       {treatmentsNeeded !== null && (
-        <div style={{ backgroundColor: 'yellow', color: 'red', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
+        <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
           Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
         </div>
       )}
