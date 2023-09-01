@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Button, Typography  } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LeftMenu from '../components/leftMenu';
 
