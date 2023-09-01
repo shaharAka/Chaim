@@ -20,7 +20,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
   const [deltaEValue, setDeltaEValue] = useState();
 
   const handleSegmentDone = () => {
-    console.log('deltaEValue before calling onSegmentDone:", deltaEValue);
+    console.log('deltaEValue before calling onSegmentDone:', deltaEValue);
     onSegmentDone(deltaEValue);  
     console.log('handleSegmentDone executed, deltaE:', deltaEValue);
   };
