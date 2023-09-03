@@ -4,8 +4,6 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Button, Typography  } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LeftMenu from '../components/leftMenu';
-
-
 const TreatmentSection = ({ index, onSegmentDone }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
@@ -153,7 +151,6 @@ export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
   const [deltaEHistory, setDeltaEHistory] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
-
   useEffect(() => {
   console.log('deltaEHistory changed:', deltaEHistory);
 }, [deltaEHistory]);
@@ -163,10 +160,8 @@ export default function UploadPage() {
     console.log('DeltaE history is too short', deltaEHistory);
     return null;
   }
-
   const deltaEDiff = deltaEHistory[1] - deltaEHistory[0];
   let treatmentsNeeded;
-
   if (deltaEDiff < 0 && deltaEHistory[1] > 100) {
     treatmentsNeeded = Math.ceil((deltaEHistory[1] - 100) / Math.abs(deltaEDiff));
   } else if (deltaEDiff > 0 && deltaEHistory[1] > 100) {
@@ -176,15 +171,12 @@ export default function UploadPage() {
   } else {
     treatmentsNeeded = "Undefined scenario";
   }
-
   console.log('Previous deltaE:', deltaEHistory[0]);
   console.log('Current deltaE:', deltaEHistory[1]);  
   console.log('Delta Difference:', deltaEDiff);  
   console.log('Treatments Needed:', treatmentsNeeded);
-
   return treatmentsNeeded;
 };
-
   
   const onSegmentDone = (newDeltaE) => {
   console.log('Received newDeltaE:', newDeltaE);
@@ -197,9 +189,7 @@ export default function UploadPage() {
     return updatedHistory;
   });
 };
-
   const treatmentsNeeded = calculateLinearPrediction();
-
   return (
     <div>
       <LeftMenu />
@@ -208,7 +198,7 @@ export default function UploadPage() {
       ))}
       {treatmentsNeeded !== null && (
         <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
-          Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
+          Based on a simple linear prediction, it will take <u>approximately {treatmentsNeeded} more treatments</u> to reach healthy skin levels.
         </div>
       )}
     </div>
