@@ -120,6 +120,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
       aspect: completedCrop.aspect,
     };
 
+    // Adjust the bounding box dimensions to align with the new image dimensions
     const response = await fetch('https://www.sunsolve.co/segment/', {
       method: 'POST',
       headers: {
@@ -144,6 +145,7 @@ const TreatmentSection = ({ index, onSegmentDone }) => {
     }
   };
 };
+
   const onLoad = (img) => {
     imgRef.current = img;
   };
