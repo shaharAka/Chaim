@@ -4,6 +4,8 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { useMediaQuery, CircularProgress, Accordion, AccordionSummary, AccordionDetails, Button, Typography  } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LeftMenu from '../components/leftMenu';
+
+
 const TreatmentSection = ({ index, onSegmentDone }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSegmenting, setIsSegmenting] = useState(false);
@@ -151,10 +153,11 @@ export default function UploadPage() {
   const [sections, setSections] = useState([{}]);
   const [deltaEHistory, setDeltaEHistory] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
+
   useEffect(() => {
   console.log('deltaEHistory changed:', deltaEHistory);
 }, [deltaEHistory]);
-
+  
   const calculateLinearPrediction = () => {
   if (deltaEHistory.length < 2) {
     console.log('DeltaE history is too short', deltaEHistory);
@@ -182,7 +185,7 @@ export default function UploadPage() {
   return treatmentsNeeded;
 };
 
-
+  
   const onSegmentDone = (newDeltaE) => {
   console.log('Received newDeltaE:', newDeltaE);
   console.log('Current deltaEHistory before setting:', deltaEHistory);
@@ -194,7 +197,9 @@ export default function UploadPage() {
     return updatedHistory;
   });
 };
+
   const treatmentsNeeded = calculateLinearPrediction();
+
   return (
     <div>
       <LeftMenu />
