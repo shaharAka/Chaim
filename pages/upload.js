@@ -208,7 +208,7 @@ export default function UploadPage() {
       ))}
       {treatmentsNeeded !== null && (
         <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
-          Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
+          Based on a simple linear prediction, it will take <u>approximately {treatmentsNeeded} more treatments</u> to reach healthy skin levels.
         </div>
       )}
     </div>
