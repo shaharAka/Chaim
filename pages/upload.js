@@ -154,14 +154,16 @@ export default function UploadPage() {
   useEffect(() => {
   console.log('deltaEHistory changed:', deltaEHistory);
 }, [deltaEHistory]);
-  
+
   const calculateLinearPrediction = () => {
   if (deltaEHistory.length < 2) {
     console.log('DeltaE history is too short', deltaEHistory);
     return null;
   }
+
   const deltaEDiff = deltaEHistory[1] - deltaEHistory[0];
   let treatmentsNeeded;
+
   if (deltaEDiff < 0 && deltaEHistory[1] > 100) {
     treatmentsNeeded = Math.ceil((deltaEHistory[1] - 100) / Math.abs(deltaEDiff));
   } else if (deltaEDiff > 0 && deltaEHistory[1] > 100) {
@@ -171,13 +173,16 @@ export default function UploadPage() {
   } else {
     treatmentsNeeded = "Undefined scenario";
   }
+
   console.log('Previous deltaE:', deltaEHistory[0]);
   console.log('Current deltaE:', deltaEHistory[1]);  
   console.log('Delta Difference:', deltaEDiff);  
   console.log('Treatments Needed:', treatmentsNeeded);
+
   return treatmentsNeeded;
 };
-  
+
+
   const onSegmentDone = (newDeltaE) => {
   console.log('Received newDeltaE:', newDeltaE);
   console.log('Current deltaEHistory before setting:', deltaEHistory);
@@ -198,7 +203,7 @@ export default function UploadPage() {
       ))}
       {treatmentsNeeded !== null && (
         <div style={{ backgroundColor: 'blue', color: 'white', padding: '20px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.5em' }}>
-          Based on a simple linear prediction, it will take <u>approximately {treatmentsNeeded} more treatments</u> to reach healthy skin levels.
+          Based on a simple linear prediction, it will take approximately {treatmentsNeeded} more treatments to reach a Delta E value of 100.
         </div>
       )}
     </div>
